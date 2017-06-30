@@ -1,16 +1,34 @@
 <!--index.wxml-->
-<view class="container container--{{mood}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
-  <view class="face">
-    <canvas class="canvas" canvas-id="mainCanvas" />
+
+<view class="main {{showHistory ? 'main--collapse' : ''}}" style="{{showSay ? 'filter: blur(10px)' : ''}}">
+
+  <view class="mood mood--{{mood}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+    <view class="face">
+      <canvas class="canvas" canvas-id="mainCanvas" style="{{showSay ? 'filter: blur(10px); opacity: 0.2;' : ''}}" />
+    </view>
   </view>
+
+  <view class="actions {{showActions ? '' : 'actions--hidden'}}">
+    <button class="actions__btn-confirm" bindtap="tapConfirm">Yes, That's How I Feel Today</button>
+    <button class="actions__btn-add-text" bindtap="tapAddText">Got more to say...</button>
+  </view>
+
 </view>
 
-<view class="blocks">
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
+<view class="say {{showSay ? '' : 'say--hidden'}}">
+  <textarea hidden="{{!showSay}}" class="say__textarea" placeholder="Just say it..." bindconfirm="confirmSay" focus="{{showSay}}" disabled="{{!showSay}}" maxlength="120" />
 </view>
+
+<view class="history">
+  <scroll-view class="history__scroll"></scroll-view>
+</view>
+
+<!--<view class="blocks">
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+</view>-->

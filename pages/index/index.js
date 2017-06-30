@@ -22,11 +22,22 @@ Page({
   data: {
     isAnimating: false,
     mood: 'calm',
+    showActions: true,
+    showText: false,
+    showHistory: false,
   },
 
   onLoad() {
     // this.drawFace(currentFaceParam)
     this.drawCalm()
+
+    console.log(Date.now() - 4 * 60 * 60 * 1000)
+
+    let title = util.formatTime(new Date(Date.now() - 4 * 60 * 60 * 1000))
+
+    wx.setNavigationBarTitle({
+      title: title
+    });
   },
 
 
@@ -156,7 +167,7 @@ Page({
   },
 
   drawEcstasy() {
-    console.info('Feeling Ecasty.')
+    // console.info('Feeling Ecasty.')
 
     let endParam = {
       topY: 100,
@@ -169,11 +180,13 @@ Page({
     }
 
     this.animateFace(endParam, 20, 10, this.setFaceParam)
-
+    this.setData({
+      mood: 'ecstasy'
+    })
   },
 
   drawHappy() {
-    console.info('Feeling Happy.')
+    // console.info('Feeling Happy.')
 
     let endParam = {
       topY: 220,
@@ -186,10 +199,13 @@ Page({
     }
 
     this.animateFace(endParam, 20, 10, this.setFaceParam)
+    this.setData({
+      mood: 'happy'
+    })
   },
 
   drawPleased() {
-    console.info('Feeling Pleased.')
+    // console.info('Feeling Pleased.')
 
     let endParam = {
       topY: 164,
@@ -208,7 +224,7 @@ Page({
   },
 
   drawCalm() {
-    console.info('Feeling Calm.')
+    // console.info('Feeling Calm.')
 
     let endParam = {
       topY: 150,
@@ -227,15 +243,24 @@ Page({
   },
 
   drawUpset() {
-    console.info('Feeling Upset.')
+    // console.info('Feeling Upset.')
+    this.setData({
+      mood: 'upset'
+    })
   },
 
   drawOops() {
-    console.info('Feeling Oops.')
+    // console.info('Feeling Oops.')
+    this.setData({
+      mood: 'oops'
+    })
   },
 
   drawUgh() {
-    console.info('Feeling Ugh.')
+    // console.info('Feeling Ugh.')
+    this.setData({
+      mood: 'ugh'
+    })
   },
 
   touchStartFace(e) {
@@ -262,16 +287,45 @@ Page({
     } else if (util.isBetween(touchY, [GAP * 6, GAP * 7])) {
       this.drawUgh()
     }
+
+    this.setData({
+      showActions: false,
+    })
   },
 
   touchEndFace(e) {
-    // let touchX = e.touches[0].clientX
-    // let touchY = e.touches[0].clientY
+    this.setData({
+      showActions: true,
+    })
   },
 
   tapFace(e) {
     this.touchMoveFace(e)
+    this.setData({
+      showActions: true,
+    })
   },
+
+  tapConfirm() {
+
+  },
+
+  tapAddText() {
+    this.setData({
+      showSay: true,
+    })
+  },
+
+  confirmSay (e) {
+    let val = e.detail.value
+
+    this.setData({
+      showSay: false,
+      showActions: true,
+    })
+  },
+
+
 
 
 })

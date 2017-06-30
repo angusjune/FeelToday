@@ -4,8 +4,8 @@
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "How's Your Day?",
-    "navigationBarTextStyle":"black"
+    "navigationBarBackgroundColor": "#0D0D0D",
+    "navigationBarTitleText": "Feel Today",
+    "navigationBarTextStyle":"light"
   }
 }
