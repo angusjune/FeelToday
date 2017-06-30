@@ -1,0 +1,16 @@
+<!--index.wxml-->
+<view class="container container--{{mood}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+  <view class="face">
+    <canvas class="canvas" canvas-id="mainCanvas" />
+  </view>
+</view>
+
+<view class="blocks">
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+  <view class="block"></view>
+</view>

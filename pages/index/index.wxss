@@ -1,0 +1,53 @@
+/**index.wxss**/
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+.canvas {
+  /*width: 480rpx;*/
+  /*height: 480rpx;*/
+  width: 240px;
+  height: 240px;
+  /*transform:scale(0.5);*/
+  transform-origin: center;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all linear 1s;
+}
+
+.container--pleased {
+  background-color: #1FCE6D;
+}
+
+.container--calm {
+  background-color: #2C97DE;
+}
+
+.face {
+  position: relative;
+  top: -40rpx;
+}
+
+
+.blocks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.1;
+}
+
+.block {
+  width: 100%;
+  height: 172rpx;
+  border-bottom: 1px solid red;
+}
