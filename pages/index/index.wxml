@@ -2,25 +2,36 @@
 
 <view class="main {{showHistory ? 'main--collapse' : ''}}" style="{{showSay ? 'filter: blur(10px)' : ''}}">
 
-  <view class="mood mood--{{mood}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+  <view class="mood mood--{{moodName}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
     <view class="face">
       <canvas class="canvas" canvas-id="mainCanvas" style="{{showSay ? 'filter: blur(10px); opacity: 0.2;' : ''}}" />
     </view>
   </view>
 
+
   <view class="actions {{showActions ? '' : 'actions--hidden'}}">
-    <button class="actions__btn-confirm" bindtap="tapConfirm">Yes, That's How I Feel Today</button>
-    <button class="actions__btn-add-text" bindtap="tapAddText">Got more to say...</button>
+    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapAddText">{{sayText != '' ? sayTextSub : 'Got something to say...'}}</button>
+
+    <button class="actions__btn-confirm-mood" bindtap="tapConfirmMood">Yes, that's how I feel today</button>
+
+    <view class="actions__btn-show-history" bindtap="tapShowHistory">
+      <text class="icon icon--24 icon--chevron-down"></text>
+    </view>
   </view>
 
 </view>
 
 <view class="say {{showSay ? '' : 'say--hidden'}}">
-  <textarea hidden="{{!showSay}}" class="say__textarea" placeholder="Just say it..." bindconfirm="confirmSay" focus="{{showSay}}" disabled="{{!showSay}}" maxlength="120" />
+  <textarea hidden="{{!showSay}}" class="say__textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" disabled="{{!showSay}}" maxlength="84" />
 </view>
 
 <view class="history">
-  <scroll-view class="history__scroll"></scroll-view>
+  <block wx:if="{{feelings.length > 0}}">
+    <scroll-view class="history__scroll"></scroll-view>
+  </block>
+  <block wx:else>
+    <view class="history__empty"></view>
+  </block>
 </view>
 
 <!--<view class="blocks">

@@ -20,8 +20,8 @@ page {
 }
 
 .canvas {
-  width: 240px;
-  height: 240px;
+  width: 120px;
+  height: 120px;
   transform-origin: center;
 }
 
@@ -51,7 +51,7 @@ page {
 }
 
 .mood--upset {
-  background-color: #F59D00;
+  background-color: #8F3FAF;
 }
 
 .mood--oops {
@@ -71,11 +71,11 @@ page {
 
 .actions {
   position: absolute;
-  bottom: 80rpx;
+  bottom: 20rpx;
   width: 600rpx;
   display: flex;
   flex-direction: column;
-  /*align-items: center;*/
+  align-items: center;
   justify-content: center;
   font-size: 32rpx;
   font-weight: 500;
@@ -90,13 +90,13 @@ page {
   pointer-events: none;
 }
 
-.actions__btn-confirm {
+.actions__btn-confirm-mood {
   color: #FFF;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 16rpx;
   padding: 10rpx 40rpx;
-  margin-bottom: 30rpx;
+  margin-bottom: 80rpx;
 }
 
 .actions__btn-confirm.button-hover {
@@ -107,6 +107,12 @@ page {
   background: transparent;
   font-size: 32rpx;
   color: rgba(0, 0, 0, 0.3);
+  margin-bottom: 30rpx;
+  
+}
+
+.actions__btn-add-text--filled {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 
@@ -133,7 +139,8 @@ page {
   font-weight: bold;
   font-size: 64rpx;
   word-break: keep-all;
-  height: 400rpx;
+  width: 630rpx;
+  height: 370rpx;
 }
 
 .say__textarea.textarea-placeholder {

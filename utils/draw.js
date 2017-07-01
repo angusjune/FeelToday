@@ -1,4 +1,4 @@
-function drawFaceCanvas(canvas, canvasSize, lipTopCenterY, lipTopBezierHandleLeftX, lipSideLeftPoint, lipSideLeftBezierHandleLeftPoint, lipSideLeftBezierHandleRightPoint, lipTopBottomY, lipBottomBezierHandleLeftX, targetFrame, resizing) {
+function drawFaceCanvasLegacy(canvas, canvasSize, lipTopCenterY, lipTopBezierHandleLeftX, lipSideLeftPoint, lipSideLeftBezierHandleLeftPoint, lipSideLeftBezierHandleRightPoint, lipTopBottomY, lipBottomBezierHandleLeftX, targetFrame, resizing) {
 
   context = wx.createCanvasContext(canvas)
 
@@ -35,7 +35,7 @@ function drawFaceCanvas(canvas, canvasSize, lipTopCenterY, lipTopBezierHandleLef
 
   context.save();
   context.beginPath();
-  context.arc(canvasSize.w / 2, canvasSize.h / 2, faceSize.w/2, 0, 2*Math.PI, false);
+  context.arc(canvasSize.w / 2, canvasSize.h / 2, faceSize.w / 2, 0, 2 * Math.PI, false);
   context.closePath();
   context.setStrokeStyle(color);
   context.setLineWidth(lineWidth);
@@ -74,6 +74,94 @@ function drawFaceCanvas(canvas, canvasSize, lipTopCenterY, lipTopBezierHandleLef
   context.bezierCurveTo(140, 71.27, 146.27, 65, 154, 65);
   context.bezierCurveTo(161.73, 65, 168, 71.27, 168, 79);
   context.closePath();
+  context.setFillStyle(color);
+  context.fill();
+
+  context.restore();
+
+  context.draw();
+
+}
+
+function drawFaceCanvas(canvas, canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLeftY, lipLeftCp1X, lipLeftCp1Y, lipLeftCp2X, lipLeftCp2Y, lipBottomY, lipBottomCp1X, targetFrame, resizing) {
+  //// General Declarations
+  context = wx.createCanvasContext(canvas)
+
+  //// Resize to Target Frame
+  context.save();
+  var resizedFrame = applyResizingBehavior('aspectfill', makeRect(0, 0, 120, 120), targetFrame);
+  context.translate(resizedFrame.x, resizedFrame.y);
+  context.scale(resizedFrame.w / 120, resizedFrame.h / 120);
+
+  context.restore();
+
+  //// Color Declarations
+  var color = 'rgba(255, 255, 255, 1)';
+
+  //// Variable Declarations
+  var lineWidth = canvasSize.w / 20;
+  var facePosition = makePoint(lineWidth / 2, lineWidth / 2);
+  var faceSize = makeSize(canvasSize.w - lineWidth, canvasSize.h - lineWidth);
+  var eyeSize = makeSize(canvasSize.w / 8, canvasSize.w / 6);
+  var eyeLeftPoint = makePoint(11 * canvasSize.w / 40, 13 * canvasSize.h / 48);
+  var eyeRightPoint = makePoint(canvasSize.w - 11 * canvasSize.w / 40 - eyeSize.w, 13 * canvasSize.h / 48);
+  var lipTopCenterPoint = makePoint(canvasSize.w / 2, lipTopY * canvasSize.h);
+  var lipTopBezierHandleLeftPoint = makePoint(lipTopCp1X * canvasSize.w, lipTopY * canvasSize.h);
+  var lipTopBezierHandleRightPoint = makePoint(canvasSize.w - lipTopBezierHandleLeftPoint.x, lipTopBezierHandleLeftPoint.y);
+  var lipSideLeftPoint = makePoint(lipLeftX * canvasSize.w, lipLeftY * canvasSize.h);
+  var lipSideRightPoint = makePoint(canvasSize.w - lipSideLeftPoint.x, lipSideLeftPoint.y);
+  var lipSideLeftBezierHandleLeftPoint = makePoint(lipLeftCp1X * canvasSize.w, lipLeftCp1Y * canvasSize.h);
+  var lipSideRightBezierHandleRightPoint = makePoint(canvasSize.w - lipSideLeftBezierHandleLeftPoint.x, lipSideLeftBezierHandleLeftPoint.y);
+  var lipSideLeftBezierHandleRightPoint = makePoint(lipLeftCp2X * canvasSize.w, lipLeftCp2Y * canvasSize.h);
+  var lipSideRightBezierHandleLeftPoint = makePoint(canvasSize.w - lipSideLeftBezierHandleRightPoint.x, lipSideLeftBezierHandleRightPoint.y);
+  var lipBottomCenterPoint = makePoint(canvasSize.w / 2, lipBottomY * canvasSize.h);
+  var lipBottomBezierHandleLeftPoint = makePoint(lipBottomCp1X * canvasSize.w, lipBottomY * canvasSize.h);
+  var lipBottomBezierHandleRightPoint = makePoint(canvasSize.w - lipBottomBezierHandleLeftPoint.x, lipBottomBezierHandleLeftPoint.y);
+
+  //// face Drawing
+  // oval(context, facePosition.x, facePosition.y, faceSize.w, faceSize.h);
+  // context.setStrokeStyle(color);
+  // context.setLineWidth(lineWidth);
+  // context.stroke();
+  //
+  // context.restore();
+
+  context.save();
+  context.beginPath();
+  context.arc(canvasSize.w / 2, canvasSize.h / 2, faceSize.w / 2, 0, 2 * Math.PI, false);
+  context.closePath();
+  context.setStrokeStyle(color);
+  context.setLineWidth(lineWidth);
+  context.stroke();
+  context.restore();
+
+  //// mouth Drawing
+  context.save();
+
+  context.beginPath();
+  context.moveTo(lipSideLeftPoint.x, lipSideLeftPoint.y);
+  context.bezierCurveTo((lipSideLeftBezierHandleRightPoint.x), lipSideLeftBezierHandleRightPoint.y, lipTopBezierHandleLeftPoint.x, lipTopBezierHandleLeftPoint.y, lipTopCenterPoint.x, lipTopCenterPoint.y);
+  context.bezierCurveTo(lipTopBezierHandleRightPoint.x, lipTopBezierHandleRightPoint.y, (lipSideRightBezierHandleLeftPoint.x), lipSideRightBezierHandleLeftPoint.y, lipSideRightPoint.x, lipSideRightPoint.y);
+  context.bezierCurveTo((lipSideRightBezierHandleRightPoint.x), lipSideRightBezierHandleRightPoint.y, lipBottomBezierHandleRightPoint.x, lipBottomBezierHandleRightPoint.y, lipBottomCenterPoint.x, lipBottomCenterPoint.y);
+  context.bezierCurveTo(lipBottomBezierHandleLeftPoint.x, lipBottomBezierHandleLeftPoint.y, (lipSideLeftBezierHandleLeftPoint.x), lipSideLeftBezierHandleLeftPoint.y, lipSideLeftPoint.x, lipSideLeftPoint.y);
+  context.closePath();
+  context.setStrokeStyle(color);
+  context.setLineWidth(lineWidth);
+  context.setLineCap('round');
+  context.setLineJoin('round');
+  context.stroke();
+
+  context.restore();
+
+  //// eyeRight Drawing
+  oval(context, eyeRightPoint.x, eyeRightPoint.y, eyeSize.w, eyeSize.h);
+  context.setFillStyle(color);
+  context.fill();
+
+  context.restore();
+
+  //// eyeLeft Drawing
+  oval(context, eyeLeftPoint.x, eyeLeftPoint.y, eyeSize.w, eyeSize.h);
   context.setFillStyle(color);
   context.fill();
 
@@ -144,7 +232,7 @@ function oval(context, x, y, w, h) {
   context.scale(w / 2, h / 2);
   context.arc(1, 1, 1, 0, 2 * Math.PI, false);
   context.closePath();
-  context.restore();
+  // context.restore();
 }
 
 function makeRect(x, y, w, h) {
@@ -162,7 +250,6 @@ function makePoint(x, y) {
 function makeSize(w, h) {
   return {w: w, h: h};
 }
-
 
 module.exports = {
   face: drawFaceCanvas,

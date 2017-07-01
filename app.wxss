@@ -2,6 +2,25 @@ page {
   font-family: -apple-system-, 'SF Pro Display', 'SF Display', sans-serif;
 }
 
+button {
+  background-color: transparent;
+}
+
 button:after {
   border: 0;
+}
+
+.icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+}
+
+.icon--24 {
+  width: 48rpx;
+  height: 48rpx;
+  background-size: 48rpx 48rpx;
+}
+
+.icon--chevron-down {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAABGdBTUEAALGPC/xhBQAAAC1QTFRFAAAA////////////////////////////////////////////////////////oUirmwAAAA50Uk5TAAMXPEpub6Gi0dzi4/BWt85zAAAAoElEQVQ4y2NgGLnAe6sAuhBjzBYgee7dZHQJy3evgeS+d++KUMXV34ElfN+9exuILC567927K0Caqe/du5cGCHHmee/evVCAsZ4rwMSZ6hDqxIB6r0KdxhgLNDkRpkrj3TuY0yyBzCZk90Gdpo5QAjEgF+I0kIOuofgX4jSEg1Ad+bwO1eEIb6F7FeE0ZAehOG0y1vBnjFoqwDAKRgEJAAC3UlnrJYdZEgAAAABJRU5ErkJggg==);
 }
