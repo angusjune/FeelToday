@@ -2,19 +2,19 @@
 
 <view class="main {{showHistory ? 'main--collapse' : ''}}" style="{{showSay ? 'filter: blur(10px)' : ''}}">
 
-  <view class="mood mood--{{moodName}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+  <view class="mood mood--{{moodId}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
     <view class="face">
-      <canvas class="canvas" canvas-id="mainCanvas" style="{{showSay ? 'filter: blur(10px); opacity: 0.2;' : ''}}" />
+      <canvas class="canvas" canvas-id="mainCanvas" />
     </view>
   </view>
 
 
   <view class="actions {{showActions ? '' : 'actions--hidden'}}">
-    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapAddText">{{sayText != '' ? sayTextSub : 'Got something to say...'}}</button>
+    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextSub : 'Got something to say...'}}</button>
 
     <button class="actions__btn-confirm-mood" bindtap="tapConfirmMood">Yes, that's how I feel today</button>
 
-    <view class="actions__btn-show-history" bindtap="tapShowHistory">
+    <view wx:if="{{feelings.length > 0}}" class="actions__btn-show-history" bindtap="tapShowHistory">
       <text class="icon icon--24 icon--chevron-down"></text>
     </view>
   </view>
@@ -22,15 +22,27 @@
 </view>
 
 <view class="say {{showSay ? '' : 'say--hidden'}}">
-  <textarea hidden="{{!showSay}}" class="say__textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" disabled="{{!showSay}}" maxlength="84" />
+  <form bindsubmit="submitSay">
+    <textarea hidden="{{!showSay}}" class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
+    <button class="say__submit" form-type="submit">Submit</button>
+  </form>
 </view>
 
 <view class="history">
   <block wx:if="{{feelings.length > 0}}">
-    <scroll-view class="history__scroll"></scroll-view>
+    <scroll-view class="history__scroll">
+      <block wx:for="{{feelings}}" wx:item="{{feeling}}" wx:key="unique">
+        <view class="history__feeling feeling--{{feeling.mood}}" hover-class="view-hover" bindtap="tapHistoryFeeling" data-time="{{feeling.time}}">
+          <view class="history__feeling__mood">
+            <!--<image src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />-->
+          </view>
+          <view wx:if="{{feeling.say != ''}}" class="history__feeling__say"></view>
+        </view>
+      </block>
+    </scroll-view>
   </block>
   <block wx:else>
-    <view class="history__empty"></view>
+    <view class="history__empty">Nothing to see here.</view>
   </block>
 </view>
 

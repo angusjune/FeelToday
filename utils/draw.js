@@ -174,7 +174,9 @@ function drawFaceCanvas(canvas, canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLe
 //// Infrastructure
 
 function clearCanvas(canvas, canvasSize) {
-  wx.createCanvasContext(canvas).clearRect(0, 0, canvasSize.width, canvasSize.height);
+  let context = wx.createCanvasContext(canvas)
+  context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+  context.draw();
 }
 
 // Possible arguments for 'resizing' parameter are:

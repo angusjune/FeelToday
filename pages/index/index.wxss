@@ -34,31 +34,31 @@ page {
   transition: all linear 0.5s;
 }
 
-.mood--ecstasy {
+.mood--0 {
   background-color: #E94B35;
 }
 
-.mood--happy {
+.mood--1 {
   background-color: #F59D00;
 }
 
-.mood--pleased {
+.mood--2 {
   background-color: #1FCE6D;
 }
 
-.mood--calm {
+.mood--3 {
   background-color: #2C97DE;
 }
 
-.mood--upset {
+.mood--4 {
   background-color: #8F3FAF;
 }
 
-.mood--oops {
+.mood--5 {
   background-color: #7F8C8D;
 }
 
-.mood--ugh {
+.mood--6 {
   background-color: #2B3E51;
 }
 
@@ -108,7 +108,7 @@ page {
   font-size: 32rpx;
   color: rgba(0, 0, 0, 0.3);
   margin-bottom: 30rpx;
-  
+
 }
 
 .actions__btn-add-text--filled {

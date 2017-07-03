@@ -38,7 +38,15 @@ function isBetween(value, array) {
   else return false
 }
 
+function subText (val) {
+  if (val.length > 15) {
+    val = val.substr(0, 15) + '...'
+  }
+  return val
+}
+
 module.exports = {
   formatTime: formatTime,
-  isBetween: isBetween
+  isBetween: isBetween,
+  subText: subText,
 }
