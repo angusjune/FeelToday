@@ -30,13 +30,17 @@
 
 <view class="history">
   <block wx:if="{{feelings.length > 0}}">
-    <scroll-view class="history__scroll">
-      <block wx:for="{{feelings}}" wx:item="{{feeling}}" wx:key="unique">
-        <view class="history__feeling feeling--{{feeling.mood}}" hover-class="view-hover" bindtap="tapHistoryFeeling" data-time="{{feeling.time}}">
-          <view class="history__feeling__mood">
-            <!--<image src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />-->
+    <scroll-view class="history__scroll" scroll-x>
+      <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
+        <view class="history__feeling " hover-class="view-hover" bindtap="tapHistoryFeeling" data-time="{{feeling.time}}">
+          <view class="history__feeling__mood mood--{{feeling.mood}}">
+
+            <view class="history__feeling__content">
+              <image class="history__feeling__img" src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />
+              <view wx:if="{{feeling.say != ''}}" class="history__feeling__say"></view>
+            </view>
+
           </view>
-          <view wx:if="{{feeling.say != ''}}" class="history__feeling__say"></view>
         </view>
       </block>
     </scroll-view>

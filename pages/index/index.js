@@ -4,7 +4,8 @@ const animate = require('../../utils/animate.js')
 const app = getApp()
 
 const GAP  = 86
-const DATE_OFFSET = - 2 * 60 * 60 * 1000 // milliseconds
+// const DATE_OFFSET = - 2 * 60 * 60 * 1000 // milliseconds
+const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // milliseconds
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = [{
   id: 0,
@@ -422,47 +423,35 @@ Page({
     let now = Date.now() + DATE_OFFSET
     let isFeelingExist = false
 
-    let loop = feelings.map((feeling) => {
-      return new Promise((resolve) => {
-        if (now - feeling.time < 24 * 60 * 60 * 1000) {
-          isFeelingExist = true
-          let index = feelings.indexOf(feeling)
-          feelings[index] = newFeeling // Replace it with the new feeling
-        }
-        console.log('first resolve')
-        resolve('first resolve')
-      });
+    feelings.forEach((feeling, index) => {
+      if (now - feeling.time < 24 * 60 * 60 * 1000) {
+        isFeelingExist = true
+        let index = feelings.indexOf(feeling)
+        feelings[index] = newFeeling // Replace it with the new feeling
+      }
     })
 
-    Promise.all(loop).then(() => {
-      if (!isFeelingExist) {
-        feelings.push(newFeeling)
-      }
+    if (!isFeelingExist) {
+      feelings.push(newFeeling)
+    }
 
-      let promise = new Promise((resolve, reject) => {
-        wx.setStorage({
-          key: 'feelings',
-          data: feelings,
-          success: resolve(newFeeling),
-          fail: reject(err)
-        })
-      })
-
-      promise.then((res) => {
+    wx.setStorage({
+      key: 'feelings',
+      data: feelings,
+      success: (res) => {
         console.log('Feeling stored: ', res)
         this.setData({ feelings: feelings })
-      })
-      .catch((err) => {
-        console.error('Handle rejected promise here: ', err);
-      })
-    });
+      },
+      fail: (err) => {
+        console.error('Handle rejected promise here: ', err)
+      }
+    })
   },
 
 
 
   getCurrentFeeling (feelings, callback) {
     let now = Date.now() + DATE_OFFSET
-
 
     feelings.forEach((feeling) => {
       if (now - feeling.time < 24 * 60 * 60 * 1000) {
