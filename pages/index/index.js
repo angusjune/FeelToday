@@ -139,7 +139,7 @@ Page({
 
     if (app.globalData.feelings.length > 0) {
       this.setData({
-        feelings: app.globalData.feelings,
+        feelings: app.globalData.feelings.reverse(), // From new to old
       })
 
       this.getCurrentFeeling(app.globalData.feelings, (res) => {
@@ -153,22 +153,6 @@ Page({
           this.drawMood(res.mood)
         }
       })
-
-      // let promise = new Promise((resolve, reject) => {
-      //   this.getCurrentFeeling(app.globalData.feelings, resolve)
-      // })
-      //
-      // promise.then((res) => {
-      //   if (res != {}) {
-      //     this.setData({
-      //       moodName: MOODS[res.mood].name,
-      //       moodId: res.mood,
-      //       sayText: res.say,
-      //       sayTextSub: util.subText(res.say),
-      //     })
-      //     this.drawMood(res.mood)
-      //   }
-      // })
     }
   },
 
@@ -413,7 +397,7 @@ Page({
   saveFeelingToStorage() {
     let time = Date.now()
 
-    let feelings = this.data.feelings
+    let feelings = this.data.feelings.reverse() // From old to new
     let newFeeling  = {
       mood: this.data.moodId,
       say: this.data.sayText,
@@ -440,7 +424,7 @@ Page({
       data: feelings,
       success: (res) => {
         console.log('Feeling stored: ', res)
-        this.setData({ feelings: feelings })
+        this.setData({ feelings: feelings.reverse() })
       },
       fail: (err) => {
         console.error('Handle rejected promise here: ', err)

@@ -120,7 +120,6 @@ page {
 .say {
   width: 100%;
   height: 100%;
-  padding: 60rpx;
   position: absolute;
   top: 0;
   left: 0;
@@ -141,10 +140,28 @@ page {
   word-break: keep-all;
   width: 630rpx;
   height: 370rpx;
+  margin: 60rpx;
 }
 
 .say__textarea.textarea-placeholder {
   color: rgba(0, 0, 0, 0.3);
+}
+
+.say__submit {
+  width: 140rpx;
+  height: 120rpx;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAA8CAYAAADxJz2MAAAABGdBTUEAALGPC/xhBQAAA7dJREFUeAHtmstrE1EUhxurdFERRcVKlSiIVNx14UKoDxSkXQiCVgRBFxVcuBCq4MJd/oT6F7jorthNQaQg0oUKgqCC+EDEIBYf+MR3jd/RBoYwnXtuM3cyk3sP/Jp05jfnnvM1zUxOpqMjRCAQCAQCgUAgEAgEAoFAIBAIBAKBQIYEarVaLxpHs+jl/PMNGZZQ3KWA1Y/eocZ4y4be4naWQeUA6kNvGslFfh/PoIxiLgGkMqpGYMU9ndV2t0RrbAcfpHroYxqZ3ufmtP16AxB4q4ByDW1RwLmh8PhjAV43uok08QGT6RXqFbwugExryOH5inb5Q8fQKTA60RWkiZ+Yhgwp/dkNjBK6rCGHZw4d9YeOolOAjCnhie2UIqU/FoBULOCd84eMolPAjVrAqyhS+mMB3IgFvEv+kFF0CrhhJCcDTcjJpaRI64cFGINILkM0MYlpqR9kFF0CYwDJBbAm5IK6S5HWDwswZKb3UUMOzy20PG0yVu8DFHCYAvaiGrpeKpUm0i5Im49a+vDOoDWKY+7j2U297xXe9C0UuwxNoca4yoYV6a+YnJE1y8g008PyL57wU8ZYrQsKuPi/ltift9m6MqvqWKsHCRRNCORNWdW24DoU8dBQ7R32y7zNacga6J6hlvpuGdnLv3nrg0I+1atKeLzLvtWuqiW3zUxPTiz9rmqxzksxM0gT8upYa72A4QBy2s70Bgwps91NA/vQH6SJB5jWpVUhuTqRzUxvMK21U81DExeQNuQ9c32zBZDDdqY33OyaTo+nofNagvgeoaa+oOZ4m5neiNPm00pOU2eRNp5i3LiYtTmuol0E3+hi1mjZMRR8xqK5Z3jLNsUKEIv8xZzp0eBppD2xPMe7WQMRn81Mb0yTM7ee+Wa1EF/gT/xSm/3+zfRo+iTSDjLlFrKtca8IttvM9OSypn1mejRzHP1GmniFaVsUIr+HmR4QjiEtRLmhcbtA5NFmpie3Z3RH4bfVc5o7gn4hTbzGJP6k+/SieeRjovOBRcv/IDR5CGm/n4gCSnre+plelmQhcRD9SCJisa+K1+o6Mstena1F00PouwWoOKv8m+djpueMVEJimj+AvsWRUWzL10wvoU+nuwC1H2m/dqxzFX++ZnpOKRmSA2MP+lKnY3iUE1A+Z3qGPp3uBopcLH82wJNPNPme6TmlZEgOnJ1I3tsWimLM9Ax9Ot0NuR1IpjPRkBNNIeFZ3ZmQFllgyS0WJ5B8nKuiCe4aeMxjiEAgEAgEAoFAwB8CfwH84eKl2weyOAAAAABJRU5ErkJggg==);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80rpx 60rpx;
+  border-radius: 8rpx;
+  position: absolute;
+  right: 60rpx;
+  transition: transform 0.15s ease;
+}
+
+.say__submit.button-hover {
+  transform: scale(0.85);
 }
 
 

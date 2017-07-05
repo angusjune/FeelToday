@@ -24,13 +24,13 @@
 <view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="submitSay">
     <textarea hidden="{{!showSay}}" class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
-    <button class="say__submit" form-type="submit">Submit</button>
+    <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
   </form>
 </view>
 
 <view class="history">
   <block wx:if="{{feelings.length > 0}}">
-    <scroll-view class="history__scroll" scroll-x>
+    <scroll-view class="history__scroll" scroll-x scroll-with-animation>
       <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
         <view class="history__feeling " hover-class="view-hover" bindtap="tapHistoryFeeling" data-time="{{feeling.time}}">
           <view class="history__feeling__mood mood--{{feeling.mood}}">
