@@ -10,7 +10,7 @@
 
 
   <view class="actions {{showActions ? '' : 'actions--hidden'}}">
-    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextSub : 'Got something to say...'}}</button>
+    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextTrimmed : 'Got something to say...'}}</button>
 
     <button class="actions__btn-confirm-mood" bindtap="tapConfirmMood">Yes, that's how I feel today</button>
 
@@ -21,12 +21,12 @@
 
 </view>
 
-<view class="say {{showSay ? '' : 'say--hidden'}}">
+<cover-view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="submitSay">
     <textarea hidden="{{!showSay}}" class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
     <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
   </form>
-</view>
+</cover-view>
 
 <view class="history">
   <block wx:if="{{feelings.length > 0}}">
