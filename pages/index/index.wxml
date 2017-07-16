@@ -49,13 +49,3 @@
     <view class="history__empty">Nothing to see here.</view>
   </block>
 </view>
-
-<!--<view class="blocks">
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-  <view class="block"></view>
-</view>-->
