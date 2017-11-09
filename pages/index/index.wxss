@@ -124,7 +124,7 @@ page {
   top: 0;
   left: 0;
   background-color: rgba(0, 0 ,0, 0.8);
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s 0.15s ease;
   will-change: opacity;
 }
 
@@ -143,6 +143,11 @@ page {
   margin: 60rpx;
 }
 
+/*.say--hidden .say__textarea {
+  visibility: hidden;
+  pointer-events: none;
+}*/
+
 .say__textarea.textarea-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
@@ -156,12 +161,18 @@ page {
   background-size: 80rpx 60rpx;
   border-radius: 8rpx;
   position: absolute;
+  top: 430rpx;
   right: 60rpx;
   transition: transform 0.15s ease;
+  z-index: 9;
 }
 
 .say__submit.button-hover {
   transform: scale(0.85);
+}
+
+.say--hidden .say__submit {
+  transform: scale(0);
 }
 
 
@@ -231,4 +242,24 @@ page {
   content: '';
   position: absolute;
   right: -22rpx;
+}
+
+.mood--animated {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 60rpx;
+  animation-play-state: paused;
+  opacity: 0;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.2);
+}
+
+.mood--animated.mood--animating {
+  animation-play-state: running;
+}
+
+.animated__feeling-img {
+  width: 200rpx;
+  height: 200rpx;
 }

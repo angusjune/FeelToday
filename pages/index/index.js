@@ -23,11 +23,19 @@ Page({
     showHistory: false,
     sayText: '',
     sayTextTrimmed: '', // sayText after substr
+    animationData: {},
+
   },
 
   onLoad() {
     this.drawFace(currentFaceParam)
     this.drawMood(3) // Default mood Id is 3
+
+    let animation = wx.createAnimation()
+    let imgAnimation = wx.createAnimation()
+
+    this.animation = animation
+    this.imgAnimation = imgAnimation
   },
 
   onShow() {
@@ -226,10 +234,21 @@ Page({
       frontColor: '#ffffff',
       backgroundColor: MOODS[moodId].color,
       animation: {
-        duration: 500,
+        duration: 800,
         timingFunc: 'linear'
       }
     })
+
+    // let that = this
+    //
+    // wx.canvasToTempFilePath({
+    //   destWidth: 360,
+    //   destHeight: 360,
+    //   canvasId: 'mainCanvas',
+    //   success: function(res) {
+    //     that.setData({ faceImgUrl: res.tempFilePath })
+    //   }
+    // })
   },
 
   touchStartFace(e) {
@@ -276,13 +295,14 @@ Page({
 
   tapConfirmMood () {
     this.saveFeelingToStorage()
+    this.animateMood()
   },
 
   tapShowSay() {
     this.setData({
       showSay: true,
     })
-    // draw.clear('mainCanvas', CANVAS_SIZE)
+    draw.clear('mainCanvas', CANVAS_SIZE)
   },
 
   submitSay (e) {
@@ -361,7 +381,27 @@ Page({
 
 
   animateMood() {
+    this.animation.opacity(1).width('120rpx').height('120rpx').left('315rpx').top('543rpx').step({duration: 600, timingFunction: 'ease'})
+    this.animation.left('60rpx').top('1026rpx').step({duration: 650, delay: 50, timingFunction: 'ease'})
+    this.animation.opacity(0).step({duration: 200, delay: 700})
 
+    this.imgAnimation.width('100rpx').height('100rpx').step({duration: 600, timingFunction: 'ease'})
+
+    this.setData({
+      animationData: this.animation.export(),
+      imgAnimation: this.imgAnimation.export()
+    })
+
+    setTimeout(() => {
+      this.setData({
+        showHistory: true,
+        showActions: false,
+      })
+    }, 600)
+
+    setTimeout(() => {
+
+    }, 3000)
   },
 
 
