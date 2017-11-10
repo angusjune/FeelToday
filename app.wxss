@@ -24,3 +24,13 @@ button:after {
 .icon--chevron-down {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAABGdBTUEAALGPC/xhBQAAAC1QTFRFAAAA////////////////////////////////////////////////////////oUirmwAAAA50Uk5TAAMXPEpub6Gi0dzi4/BWt85zAAAAoElEQVQ4y2NgGLnAe6sAuhBjzBYgee7dZHQJy3evgeS+d++KUMXV34ElfN+9exuILC567927K0Caqe/du5cGCHHmee/evVCAsZ4rwMSZ6hDqxIB6r0KdxhgLNDkRpkrj3TuY0yyBzCZk90Gdpo5QAjEgF+I0kIOuofgX4jSEg1Ad+bwO1eEIb6F7FeE0ZAehOG0y1vBnjFoqwDAKRgEJAAC3UlnrJYdZEgAAAABJRU5ErkJggg==);
 }
+
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(1px);
+}

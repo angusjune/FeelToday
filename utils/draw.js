@@ -1,6 +1,6 @@
 function drawFaceCanvasLegacy(canvas, canvasSize, lipTopCenterY, lipTopBezierHandleLeftX, lipSideLeftPoint, lipSideLeftBezierHandleLeftPoint, lipSideLeftBezierHandleRightPoint, lipTopBottomY, lipBottomBezierHandleLeftX, targetFrame, resizing) {
 
-  context = wx.createCanvasContext(canvas)
+  let context = wx.createCanvasContext(canvas)
 
   //// Resize to Target Frame
   context.save();
@@ -85,7 +85,7 @@ function drawFaceCanvasLegacy(canvas, canvasSize, lipTopCenterY, lipTopBezierHan
 
 function drawFaceCanvas(canvas, canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLeftY, lipLeftCp1X, lipLeftCp1Y, lipLeftCp2X, lipLeftCp2Y, lipBottomY, lipBottomCp1X, targetFrame, resizing) {
   //// General Declarations
-  context = wx.createCanvasContext(canvas)
+  let context = wx.createCanvasContext(canvas)
 
   //// Resize to Target Frame
   context.save();
