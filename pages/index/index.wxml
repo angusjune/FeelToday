@@ -4,13 +4,14 @@
 
   <view class="mood mood--{{moodId}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
     <view class="face">
-      <canvas class="canvas" canvas-id="mainCanvas" />
+      <!--<canvas class="canvas" canvas-id="mainCanvas" />
+      <image mode="aspectFill" src="{{faceImgUrl}}" style="width: 120px; height: 120px; position: absolute;" />-->
     </view>
   </view>
 
 
   <view class="actions {{showActions ? '' : 'actions--hidden'}}">
-    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextSub : 'Got something to say...'}}</button>
+    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextTrimmed : 'Got something to say...'}}</button>
 
     <button class="actions__btn-confirm-mood" bindtap="tapConfirmMood">Yes, that's how I feel today</button>
 
@@ -23,7 +24,7 @@
 
 <view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="submitSay">
-    <textarea hidden="{{!showSay}}" class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
+    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
     <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
   </form>
 </view>
@@ -48,4 +49,8 @@
   <block wx:else>
     <view class="history__empty">Nothing to see here.</view>
   </block>
+</view>
+
+<view class="mood mood--{{moodId}} mood--animated" animation="{{animationData}}">
+  <image class="animated__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" animation="{{imgAnimation}}" />
 </view>
