@@ -1,10 +1,11 @@
 <!--index.wxml-->
 
+
 <view class="main {{showHistory ? 'main--collapse' : ''}}" style="{{showSay ? 'filter: blur(10px)' : ''}}">
 
-  <view class="mood mood--{{moodId}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+  <view class="mood mood--{{moodId}} {{showHistory ? 'main--collapse' : ''}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
     <view class="face">
-      <canvas class="canvas" canvas-id="mainCanvas" />
+      <canvas class="canvas" canvas-id="mainCanvas"></canvas>
       <!--<image mode="aspectFill" src="{{faceImgUrl}}" style="width: 120px; height: 120px; position: absolute;" />-->
     </view>
   </view>
@@ -22,7 +23,7 @@
 
 </view>
 
-<view class="say {{showSay ? '' : 'say--hidden'}}">
+<!-- <view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="submitSay">
     <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
     <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
@@ -53,4 +54,4 @@
 
 <view class="mood mood--{{moodId}} mood--animated" animation="{{animationData}}">
   <image class="animated__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" animation="{{imgAnimation}}" />
-</view>
+</view> -->
