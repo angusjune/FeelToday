@@ -4,8 +4,8 @@
 
   <view class="mood mood--{{moodId}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
     <view class="face">
-      <!--<canvas class="canvas" canvas-id="mainCanvas" />
-      <image mode="aspectFill" src="{{faceImgUrl}}" style="width: 120px; height: 120px; position: absolute;" />-->
+      <canvas class="canvas" canvas-id="mainCanvas" />
+      <!--<image mode="aspectFill" src="{{faceImgUrl}}" style="width: 120px; height: 120px; position: absolute;" />-->
     </view>
   </view>
 

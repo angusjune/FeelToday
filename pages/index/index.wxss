@@ -97,6 +97,7 @@ page {
   border-radius: 16rpx;
   padding: 10rpx 40rpx;
   margin-bottom: 80rpx;
+  font-weight: 500;
 }
 
 .actions__btn-confirm-mood.button-hover {
