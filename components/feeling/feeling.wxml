@@ -1,0 +1,11 @@
+<!--components/feeling.wxml-->
+<!-- <view class="history__feeling " hover-class="view-hover" bindtap="tapFeeling" data-time="{{feeling.time}}"> -->
+  <view class="feeling mood--{{feeling.mood}}" hover-class="view-hover" bindtap="tapFeeling" data-time="{{feeling.time}}">
+
+    <view class="feeling__content">
+      <image class="feeling__img" src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />
+      <view wx:if="{{feeling.say != ''}}" class="feeling__say"></view>
+    </view>
+
+  </view>
+<!-- </view> -->

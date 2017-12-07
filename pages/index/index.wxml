@@ -1,57 +1,62 @@
 <!--index.wxml-->
 
 
-<view class="main {{showHistory ? 'main--collapse' : ''}}" style="{{showSay ? 'filter: blur(10px)' : ''}}">
-
-  <view class="mood mood--{{moodId}} {{showHistory ? 'main--collapse' : ''}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+<view class="main">
+<!-- The face canvas -->
+  <view class="mood mood--{{moodId}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
     <view class="face">
       <canvas class="canvas" canvas-id="mainCanvas"></canvas>
       <!--<image mode="aspectFill" src="{{faceImgUrl}}" style="width: 120px; height: 120px; position: absolute;" />-->
     </view>
   </view>
 
-
+<!-- Action buttons -->
   <view class="actions {{showActions ? '' : 'actions--hidden'}}">
     <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextTrimmed : 'Got something to say...'}}</button>
 
     <button class="actions__btn-confirm-mood" bindtap="tapConfirmMood">Yes, that's how I feel today</button>
 
     <view wx:if="{{feelings.length > 0}}" class="actions__btn-show-history" bindtap="tapShowHistory">
-      <text class="icon icon--24 icon--chevron-down"></text>
+      <text class="icon icon--24 icon--reverse icon--chevron-down"></text>
     </view>
   </view>
-
 </view>
 
-<!-- <view class="say {{showSay ? '' : 'say--hidden'}}">
+<view class="mask {{showMask ? '' : 'mask--hidden'}}"></view>
+
+<!-- Enter something to say -->
+<view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="submitSay">
     <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
     <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
   </form>
 </view>
 
-<view class="history">
-  <block wx:if="{{feelings.length > 0}}">
-    <scroll-view class="history__scroll" scroll-x scroll-with-animation>
-      <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
-        <view class="history__feeling " hover-class="view-hover" bindtap="tapHistoryFeeling" data-time="{{feeling.time}}">
-          <view class="history__feeling__mood mood--{{feeling.mood}}">
 
-            <view class="history__feeling__content">
-              <image class="history__feeling__img" src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />
-              <view wx:if="{{feeling.say != ''}}" class="history__feeling__say"></view>
-            </view>
+<!-- Mood history -->
+<view class="history {{showHistory ? '' : 'history--hidden'}}">
 
-          </view>
-        </view>
-      </block>
-    </scroll-view>
-  </block>
-  <block wx:else>
-    <view class="history__empty">Nothing to see here.</view>
-  </block>
+  <view class="history__close" bindtap="tapHideHistory">
+    <text class="icon icon--24 icon--chevron-down"></text>
+    <!-- <text class="icon icon--34 icon--close"></text> -->
+  </view>
+
+  <view class="history__modal">
+    <block wx:if="{{feelings.length > 0}}">
+      <scroll-view class="history__scroll" scroll-y scroll-with-animation>
+        <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
+          <feeling class="history__feeling" feeling="{{feeling}}"></feeling>
+        </block>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <view class="history__empty">Nothing to see here.</view>
+    </block>
+  </view>
+
 </view>
 
-<view class="mood mood--{{moodId}} mood--animated" animation="{{animationData}}">
-  <image class="animated__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" animation="{{imgAnimation}}" />
-</view> -->
+<!-- Mood animation when confirm mood button is clicked -->
+<cover-view class="mood mood--{{moodId}} mood--animate" animation="{{animationData}}" transitionstart="{{moodAnimationStart}}" transitionend="{{moodAnimationEnd}}">
+  <cover-image class="mood--animate__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" />
+</cover-view>

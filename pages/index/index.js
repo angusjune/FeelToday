@@ -17,7 +17,7 @@ Page({
   data: {
     isAnimating: false,
     feelings: [],
-    moodName: 'calm',
+    // moodName: 'calm',
     moodId: 3,
     showActions: true,
     showHistory: false,
@@ -32,10 +32,10 @@ Page({
     this.drawMood(3) // Default mood Id is 3
 
     let animation = wx.createAnimation()
-    let imgAnimation = wx.createAnimation()
+    // let imgAnimation = wx.createAnimation()
 
     this.animation = animation
-    this.imgAnimation = imgAnimation
+    // this.imgAnimation = imgAnimation
   },
 
   onShow() {
@@ -51,7 +51,7 @@ Page({
         if (res != {}) {
           // If feelings data exists
           this.setData({
-            moodName: MOODS[res.mood].name,
+            // moodName: MOODS[res.mood].name,
             moodId: res.mood,
             sayText: res.say,
             sayTextTrimmed: util.subText(res.say),
@@ -227,7 +227,7 @@ Page({
     let endParam = MOODS[moodId].param
     this.animateFace(endParam, 10, 10, this.setFaceParam)
     this.setData({
-      moodName: MOODS[moodId].name,
+      // moodName: MOODS[moodId].name,
       moodId: moodId,
     })
     wx.setNavigationBarColor({
@@ -249,6 +249,40 @@ Page({
     //     that.setData({ faceImgUrl: res.tempFilePath })
     //   }
     // })
+  },
+
+  showFace() {
+    this.drawFace(currentFaceParam)
+  },
+
+  hideFace() {
+    draw.clear('mainCanvas', CANVAS_SIZE)
+  },
+
+  showActions() {
+    this.setData({ showActions: true })
+  },
+
+  hideActions() {
+    this.setData({ showActions: false })
+  },
+
+  showMask() {
+    this.setData({ showMask: true })
+  },
+
+  hideMask() {
+    this.setData({ showMask: false })
+  },
+
+  showHistory() {
+    this.setData({ showHistory: true })
+    this.showMask()
+  },
+
+  hideHistory() {
+    this.setData({ showHistory: false })
+    this.hideMask()
   },
 
   touchStartFace(e) {
@@ -281,16 +315,12 @@ Page({
   },
 
   touchEndFace(e) {
-    this.setData({
-      showActions: true,
-    })
+    this.showActions()
   },
 
   tapFace(e) {
     this.touchMoveFace(e)
-    this.setData({
-      showActions: true,
-    })
+    this.showActions()
   },
 
   tapConfirmMood () {
@@ -302,7 +332,7 @@ Page({
     this.setData({
       showSay: true,
     })
-    draw.clear('mainCanvas', CANVAS_SIZE)
+    this.hideFace()
   },
 
   submitSay (e) {
@@ -314,14 +344,17 @@ Page({
       sayText: val,
       sayTextTrimmed: util.subText(val)
     })
-    this.drawFace(currentFaceParam)
+    this.showFace()
   },
 
   tapShowHistory() {
-    this.setData({
-      showHistory: !this.data.showHistory,
-      showActions: this.data.showHistory,
-    })
+    this.showHistory()
+    this.hideFace()
+  },
+
+  tapHideHistory() {
+    this.hideHistory()
+    this.showFace()
   },
 
   saveFeelingToStorage() {
@@ -381,31 +414,26 @@ Page({
 
 
   animateMood() {
-    this.animation.opacity(1).width('120rpx').height('120rpx').left('315rpx').top('543rpx').step({duration: 600, timingFunction: 'ease'})
-    this.animation.left('60rpx').top('1026rpx').step({duration: 650, delay: 50, timingFunction: 'ease'})
-    this.animation.opacity(0).step({duration: 200, delay: 700})
 
-    this.imgAnimation.width('100rpx').height('100rpx').step({duration: 600, timingFunction: 'ease'})
+    this.animation.opacity(1).step({duration: 300})
+    this.animation.translateY(500).rotate(20).step({duration: 650, delay: 300,  timingFunction: 'ease-in'})
+
+    this.animation.opacity(0).step()
+    this.animation.rotate(0).translateY(0).step()
 
     this.setData({
       animationData: this.animation.export(),
-      imgAnimation: this.imgAnimation.export()
     })
-
-    setTimeout(() => {
-      this.setData({
-        showHistory: true,
-        showActions: false,
-      })
-    }, 600)
-
-    setTimeout(() => {
-
-    }, 3000)
   },
 
+  moodAnimationStart() {
+    console.log('animate start')
+    this.hideActions()
+  },
 
-
-
+  moodAnimationEnd() {
+    console.log('animate end')
+    this.showActions()
+  },
 
 })
