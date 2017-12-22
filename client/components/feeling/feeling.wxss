@@ -42,3 +42,29 @@
   position: absolute;
   right: -22rpx;
 }
+
+.card-container, .card__front, .card__back {
+  width: 480rpx;
+  height: 560rpx;
+}
+
+.card-container {
+  perspective: 960rpx;
+}
+
+.card {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card__front, .card__back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+}
+
+.card__back {
+  transform: rotateY(180deg);
+}
