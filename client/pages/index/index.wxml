@@ -45,7 +45,7 @@
     <block wx:if="{{feelings.length > 0}}">
       <scroll-view class="history__scroll" scroll-y scroll-with-animation>
         <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
-          <feeling class="history__feeling" feeling="{{feeling}}"></feeling>
+          <feeling class="history__feeling" feeling="{{feeling}}" bindtap="tapFeeling"></feeling>
         </block>
       </scroll-view>
     </block>

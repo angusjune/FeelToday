@@ -5,13 +5,14 @@ Component({
    */
   properties: {
     feeling: Object,
+
   },
 
   /**
    * 组件的初始数据
    */
   data: {
-
+    isFlipped: false,
   },
 
   /**
@@ -19,7 +20,9 @@ Component({
    */
   methods: {
     tapFeeling (e) {
-      console.log('Tapped')
+      this.setData({
+        isFlipped: !this.data.isFlipped
+      })
     },
   }
 })

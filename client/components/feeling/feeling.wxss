@@ -8,16 +8,22 @@
 }
 
 .feeling__content {
-  padding-top: 54rpx;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* padding-top: 54rpx;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; */
 }
 
 .feeling__img {
   width: 100rpx;
   height: 100rpx;
-  margin-bottom: 24rpx;
+  position: absolute;
+  top: 50rpx;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .feeling__say, .feeling__say:before, .feeling__say:after {
@@ -28,7 +34,10 @@
 }
 
 .feeling__say {
-  position: relative;
+  position: absolute;
+  top: 190rpx;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .feeling__say:before {
@@ -43,14 +52,14 @@
   right: -22rpx;
 }
 
-.card-container, .card__front, .card__back {
-  width: 480rpx;
-  height: 560rpx;
+.feeling__details {
+  border-radius: 16rpx;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1), 0 16rpx 40rpx rgba(0, 0, 0, 0.1);
 }
 
-.card-container {
-  perspective: 960rpx;
-}
+
 
 .card {
   transition: transform 0.5s;
@@ -58,13 +67,48 @@
   position: relative;
 }
 
+.card-container {
+  perspective: 960rpx;
+}
+
+.card-container, .card__front, .card__back {
+  width: 242rpx;
+  height: 242rpx;
+}
+
 .card__front, .card__back {
   position: absolute;
-  top: 0;
-  left: 0;
   backface-visibility: hidden;
 }
 
+.card__front {
+  top: 0;
+  left: 0;
+}
+
 .card__back {
+  top: 0;
+  left: 0;
+  /* top: 50%;
+  left: 50%;
+  margin: -240rpx 0 0 -280rpx; */
+  transition: all linear 0.4s;
   transform: rotateY(180deg);
+}
+
+
+
+
+.feeling.feeling--flipped {
+  z-index: 999;
+}
+
+.feeling.feeling--flipped .card {
+  transform: rotateY(180deg);
+}
+
+.feeling.feeling--flipped .card__back {
+  /* width: 480rpx;
+  height: 560rpx; */
+  transform: rotateY(180deg) scale(2);
 }

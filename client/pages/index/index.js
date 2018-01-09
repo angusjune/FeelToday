@@ -357,6 +357,10 @@ Page({
     this.showFace()
   },
 
+  tapFeeling(e) {
+
+  },
+
   saveFeelingToStorage() {
     let time = Date.now()
 
