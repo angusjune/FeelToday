@@ -5,14 +5,14 @@
 	},
 	"setting": {
 		"urlCheck": true,
-		"es6": true,
+		"es6": false,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.2",
-	"appid": "wx45f9f38c66b63d5e",
+	"libVersion": "2.3.0",
+	"appid": "wx53a906d1cddbe94e",
 	"projectname": "FeelToday",
 	"isGameTourist": false,
 	"condition": {
