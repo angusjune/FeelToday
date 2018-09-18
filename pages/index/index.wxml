@@ -2,33 +2,52 @@
 
 <view class="main {{showHistory ? 'main--collapse' : ''}}" style="{{showSay ? 'filter: blur(10px)' : ''}}">
 
-  <view class="mood mood--{{moodId}}" bindtap="tapFace" bindtouchstart="touchStartFace" bindtouchmove="touchMoveFace" bindtouchend="touchEndFace">
+  <!-- The soul, the face -->
+  <view class="mood mood--{{moodId}}" bindtap="onTapFace" bindtouchmove="onTouchMoveFace" bindtouchend="onTouchEndFace">
     <view class="face">
       <canvas class="canvas" canvas-id="mainCanvas" />
-      <!--<image mode="aspectFill" src="{{faceImgUrl}}" style="width: 120px; height: 120px; position: absolute;" />-->
     </view>
   </view>
+  <!-- /end of .mood -->
 
 
+  <!-- Date as the title -->
+  <view class="date" style="top: {{dateStyle.top}}; height: {{dateStyle.height}}">{{dateText}}</view>
+
+
+  <!-- Buttons -->
   <view class="actions {{showActions ? '' : 'actions--hidden'}}">
-    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="tapShowSay">{{sayText != '' ? sayTextTrimmed : 'Got something to say...'}}</button>
+    <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="onTapShowSay">{{sayText != '' ? sayTextTrimmed : 'Got something to say...'}}</button>
 
-    <button class="actions__btn-confirm-mood" bindtap="tapConfirmMood">Yes, that's how I feel today</button>
+    <button class="actions__btn-confirm-mood" bindtap="onTapConfirmMood">Yes, that's how I feel today</button>
 
-    <view wx:if="{{feelings.length > 0}}" class="actions__btn-show-history" bindtap="tapShowHistory">
+    <!-- Show mood history chevron icon -->
+    <view wx:if="{{feelings.length > 0}}" class="actions__btn-show-history" bindtap="onTapShowHistory">
       <text class="icon icon--24 icon--chevron-down"></text>
     </view>
   </view>
+  <!-- /end of .actions -->
+
 
 </view>
+<!-- /end of .main -->
 
+
+<!-- Modal for "Got something to say" -->
 <view class="say {{showSay ? '' : 'say--hidden'}}">
-  <form bindsubmit="submitSay">
-    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindconfirm="confirmSayText" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
-    <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
+  <form bindsubmit="onSubmitSay">
+    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindinput="onSayInput" bindconfirm="confirmSayText" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
+
+    <view class="say__submit-wrapper">
+      <view class="say__char-count">{{charCount}}/84</view>
+      <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
+    </view>
   </form>
 </view>
+<!-- /end of .say -->
 
+
+<!-- Mood history list -->
 <view class="history">
   <block wx:if="{{feelings.length > 0}}">
     <scroll-view class="history__scroll" scroll-x scroll-with-animation>
@@ -50,7 +69,10 @@
     <view class="history__empty">Nothing to see here.</view>
   </block>
 </view>
+<!-- /end of .history -->
 
+
+<!-- Animation after confirm selecting the mood -->
 <view class="mood mood--{{moodId}} mood--animated" animation="{{animationData}}">
   <image class="animated__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" animation="{{imgAnimation}}" />
 </view>

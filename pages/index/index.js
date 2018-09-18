@@ -9,7 +9,7 @@ const app = getApp()
 const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms, debug only
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = moods.moods
-const GAP  = Math.floor(603/MOODS.length)
+const GAP  = Math.floor(603/MOODS.length) // Magic number 603
 
 var currentFaceParam = MOODS[3].param
 
@@ -24,6 +24,7 @@ Page({
     sayText: '',
     sayTextTrimmed: '', // sayText after substr
     animationData: {},
+    charCount: 0, // how many characters are in "say" now?
 
   },
 
@@ -36,11 +37,26 @@ Page({
 
     this.animation = animation
     this.imgAnimation = imgAnimation
+
+
+    // Set date
+    let date = util.formatTime(new Date(Date.now() + DATE_OFFSET))
+    // Get pill menu position to determine date position
+    let menuRect = wx.getMenuButtonBoundingClientRect()
+
+    this.setData({
+      dateText: date,
+      dateStyle: {
+        top: menuRect.top,
+        height: menuRect.height
+      }
+    })
+
   },
 
   onShow() {
-    let title = util.formatTime(new Date(Date.now() + DATE_OFFSET))
-    wx.setNavigationBarTitle({ title: title })
+    let menuRect = wx.getMenuButtonBoundingClientRect()
+    console.log(menuRect)
 
     if (app.globalData.feelings.length > 0) {
       this.setData({
@@ -62,9 +78,6 @@ Page({
     }
   },
 
-  onReachBottom() {
-
-  },
 
   setFaceParam(faceParam) {
     currentFaceParam = faceParam
@@ -230,40 +243,15 @@ Page({
       moodName: MOODS[moodId].name,
       moodId: moodId,
     })
-    wx.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: MOODS[moodId].color,
-      animation: {
-        duration: 800,
-        timingFunc: 'linear'
-      }
-    })
-
-    // let that = this
-    //
-    // wx.canvasToTempFilePath({
-    //   destWidth: 360,
-    //   destHeight: 360,
-    //   canvasId: 'mainCanvas',
-    //   success: function(res) {
-    //     that.setData({ faceImgUrl: res.tempFilePath })
-    //   }
-    // })
   },
 
-  touchStartFace(e) {
-    // this.touchMoveFace(e)
-  },
-
-  touchMoveFace(e) {
-
+  uiChange(e) {
     if (this.data.showHistory) {
       this.setData({
         showHistory: false,
         showActions: true,
       })
     } else {
-      let touchX = e.touches[0].clientX
       let touchY = e.touches[0].clientY
 
       this.setData({
@@ -276,36 +264,48 @@ Page({
           return
         }
       }
-
     }
   },
 
-  touchEndFace(e) {
+
+  onTouchMoveFace(e) {
+    this.uiChange(e)
+  },
+
+  onTouchEndFace(e) {
     this.setData({
       showActions: true,
     })
   },
 
-  tapFace(e) {
-    this.touchMoveFace(e)
+  onTapFace(e) {
+    this.uiChange(e)
     this.setData({
       showActions: true,
     })
   },
 
-  tapConfirmMood () {
+  onTapConfirmMood () {
     this.saveFeelingToStorage()
     this.animateMood()
   },
 
-  tapShowSay() {
+
+  onTapShowSay() {
     this.setData({
       showSay: true,
     })
     draw.clear('mainCanvas', CANVAS_SIZE)
   },
 
-  submitSay (e) {
+  // On textarea change
+  onSayInput(e) {
+    let val = e.detail.value
+
+  },
+
+  // Submitting "Got something to say"
+  onSubmitSay (e) {
     let val = e.detail.value.textarea
 
     this.setData({
@@ -317,13 +317,15 @@ Page({
     this.drawFace(currentFaceParam)
   },
 
-  tapShowHistory() {
+  // Show history mood list
+  onTapShowHistory() {
     this.setData({
       showHistory: !this.data.showHistory,
       showActions: this.data.showHistory,
     })
   },
 
+  // Save today's feeling to localStorage
   saveFeelingToStorage() {
     let time = Date.now()
 
@@ -361,7 +363,6 @@ Page({
       }
     })
   },
-
 
 
   getCurrentFeeling(feelings, callback) {
