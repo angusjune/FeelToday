@@ -27,7 +27,7 @@
 <view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="onSubmitSay">
 
-    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindinput="onSayInput" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" maxlength="84" data-is="coming" />
+    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindinput="onSayInput" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" data-is="coming" />
 
     <view class="say__submit-wrapper">
       <!-- Why max length is 84? Because 42*2 = 84 -->
@@ -54,9 +54,9 @@
           <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
             <feeling class="history__feeling" feeling="{{feeling}}" isFlipped="{{feelingStyles[index].isFlipped}}" bindtap="onTapFeeling" data-index="{{index}}" data-isflipped="{{feelingStyles[index].isFlipped}}" style="z-index: {{feelingStyles[index].z}}; transform: translateX({{feelingStyles[index].x}}px) translateY({{feelingStyles[index].y}}px)"></feeling>
           </block>
-          
+
         </view>
-        
+
       </scroll-view>
     </block>
     <block wx:else>

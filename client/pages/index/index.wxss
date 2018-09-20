@@ -121,7 +121,7 @@ page {
   font-size: 64rpx;
   word-break: keep-all;
   width: 630rpx;
-  height: 370rpx;
+  height: 620rpx;
   margin: 60rpx;
 }
 
@@ -131,7 +131,10 @@ page {
 
 .say__submit-wrapper {
   width: 100%;
-  position: relative;
+  position: absolute;
+  top: 920rpx;
+  display: flex;
+  align-items: center;
 }
 
 .say__submit {
@@ -150,9 +153,15 @@ page {
 }
 
 .say__char-count {
+  position: absolute;
+  right: 240rpx;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
+  font-size: 32rpx;
   text-align: right;
+}
+
+.say__char-count--error {
+
 }
 
 .say__submit.button-hover {
