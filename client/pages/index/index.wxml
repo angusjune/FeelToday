@@ -40,7 +40,7 @@
 
 
 <!-- Mood history -->
-<view class="history {{showHistory ? '' : 'history--hidden'}}" animation="{{historyAnimation}}" bindtransitionend="onHistoryTransitionEnd">
+<view class="history {{showHistory ? '' : 'history--hidden'}}" animation="{{historyAnimation1}}" bindtransitionend="onHistoryTransitionEnd">
 
   <view class="history__close" bindtap="onTapHideHistory">
     <text class="icon icon--24 icon--chevron-down"></text>
@@ -49,9 +49,14 @@
   <view class="history__modal">
     <block wx:if="{{feelings.length > 0}}">
       <scroll-view class="history__scroll" scroll-y scroll-with-animation>
-        <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
-          <feeling class="history__feeling" feeling="{{feeling}}" bindtap="onTapFeeling"></feeling>
-        </block>
+        <view class="scroll__content">
+
+          <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
+            <feeling class="history__feeling" feeling="{{feeling}}" isFlipped="{{feelingStyles[index].isFlipped}}" bindtap="onTapFeeling" data-index="{{index}}" data-isflipped="{{feelingStyles[index].isFlipped}}" style="z-index: {{feelingStyles[index].z}}; transform: translateX({{feelingStyles[index].x}}px) translateY({{feelingStyles[index].y}}px)"></feeling>
+          </block>
+          
+        </view>
+        
       </scroll-view>
     </block>
     <block wx:else>
@@ -62,6 +67,6 @@
 </view>
 
 <!-- Mood animation when confirm mood button is clicked -->
-<cover-view class="mood mood--{{moodId}} mood--animate" animation="{{animationData}}" bindanimationend="onMoodAnimationEnd" bindtransitionend="onMoodAnimationEnd">
+<!-- <cover-view class="mood mood--{{moodId}} mood--animate" animation="{{animationData}}" bindanimationend="onMoodAnimationEnd" bindtransitionend="onMoodAnimationEnd">
   <cover-image class="mood--animate__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" />
-</cover-view>
+</cover-view> -->

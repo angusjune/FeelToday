@@ -20,10 +20,10 @@ Page({
     moodId: 3,
     showActions: true,
     showHistory: false,
+    isHistoryFlipped: false, // Is there any history card been flipped?
     sayText: '',
     sayTextTrimmed: '', // sayText after substr
-    animationData: {},
-    charCount: 0, // how many characters are in "say" now?
+    charCount: 0, // How many characters are there in "say" now?
 
   },
 
@@ -108,18 +108,26 @@ Page({
         lipLeftCp2Y = param.lipLeftCp2Y,
         lipBottomY = param.lipBottomY,
         lipBottomCp1X = param.lipBottomCp1X
+        color = param.color === undefined ? 'rgba(255, 255, 255, 1)' : param.color
 
-    draw.face('mainCanvas', canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLeftY, lipLeftCp1X, lipLeftCp1Y, lipLeftCp2X, lipLeftCp2Y, lipBottomY, lipBottomCp1X)
+    draw.face('mainCanvas', canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLeftY, lipLeftCp1X, lipLeftCp1Y, lipLeftCp2X, lipLeftCp2Y, lipBottomY, lipBottomCp1X, color)
   },
 
-  animateFace (endParam, segment, time, func) {
+  animateFace (endParam, segment, time, func, colorParam) {
+
+    if (colorParam === undefined) {
+      colorParam = {
+        start: 1,
+        end: 1,
+      }
+    }
 
     let handle = func ? func : () => {}
 
     let that = this
     let startParam = currentFaceParam
 
-    if (JSON.stringify(startParam) == JSON.stringify(endParam)) return
+    if (JSON.stringify(startParam) == JSON.stringify(endParam) && colorParam.start === colorParam.end) return
 
     if (this.data.isAnimating) return
     else this.setData({isAnimating: true})
@@ -137,7 +145,8 @@ Page({
         lipLeftCp2X = startParam.lipLeftCp2X,
         lipLeftCp2Y = startParam.lipLeftCp2Y,
         lipBottomY = startParam.lipBottomY,
-        lipBottomCp1X = startParam.lipBottomCp1X
+        lipBottomCp1X = startParam.lipBottomCp1X,
+        colorAlpha = colorParam.start
 
     animate.number({
       start: startParam.lipTopY,
@@ -219,6 +228,15 @@ Page({
       callback: (number) => { lipBottomCp1X = number }
     })
 
+    // Animating color alpha
+    animate.number({
+      start: colorParam.start,
+      end: colorParam.end,
+      diviedInto: diviedInto,
+      interval: interval,
+      callback: (number) => { colorAlpha = number }
+    })
+
     let counter = diviedInto
     let loop = () => {
       setTimeout(() => {
@@ -235,6 +253,7 @@ Page({
             lipLeftCp2Y: lipLeftCp2Y,
             lipBottomY: lipBottomY,
             lipBottomCp1X: lipBottomCp1X,
+            color: 'rgba(255, 255, 255, ' + colorAlpha + ')',
           }
 
           this.drawFace(param)
@@ -248,6 +267,7 @@ Page({
     loop()
   },
 
+  // The diffrence between drawFace() and drawMood() is that the latter animates the changing process between the former face and the current face
   drawMood(moodId) {
     let endParam = MOODS[moodId].param
     this.animateFace(endParam, 10, 10, this.setFaceParam)
@@ -257,11 +277,13 @@ Page({
   },
 
   showFace() {
-    this.drawFace(currentFaceParam)
+    // this.drawFace(currentFaceParam)
+    this.animateFace(currentFaceParam, 10, 10,this.setFaceParam, {start: 0, end: 1})
   },
 
   hideFace() {
-    draw.clear('mainCanvas', CANVAS_SIZE)
+    // draw.clear('mainCanvas', CANVAS_SIZE)
+    this.animateFace(currentFaceParam, 10, 10,this.setFaceParam, {start: 1, end: 0})
   },
 
   showActions() {
@@ -281,40 +303,46 @@ Page({
   },
 
   showHistory() {
-    // this.setData({ showHistory: true })
+    this.setData({ showHistory: true })
     this.showMask()
     this.hideFace()
+    this.hideActions()
 
-    let animation = wx.createAnimation({
-      duration: 400,
-      timingFunction: 'ease-out',
-    })
-    this.animation = animation
+    // let animation = wx.createAnimation({
+    //   duration: 400,
+    //   timingFunction: 'ease-out',
+    // })
+    // this.animation = animation
 
-    animation.translateY('0%').step()
+    // animation.translateY('0%').step()
 
-    this.setData({
-      historyAnimation: animation.export()
-    })
+    // this.setData({
+    //   historyAnimation: animation.export()
+    // })
 
   },
 
   hideHistory() {
-    // this.setData({ showHistory: false })
+    this.setData({ showHistory: false })
     this.hideMask()
-    this.showFace()
 
-    let animation = wx.createAnimation({
-      duration: 400,
-      timingFunction: 'ease-out',
-    })
-    this.animation = animation
+    setTimeout(()=>{
+      this.showFace()
+      this.showActions()
+    }, 300)
+    
 
-    animation.translateY('110%').step()
+    // let animation = wx.createAnimation({
+    //   duration: 400,
+    //   timingFunction: 'ease-out',
+    // })
+    // this.animation = animation
 
-    this.setData({
-      historyAnimation: animation.export()
-    })
+    // animation.translateY('110%').step()
+
+    // this.setData({
+    //   historyAnimation: animation.export()
+    // })
   },
 
   uiChange(e) {
@@ -406,7 +434,33 @@ Page({
   },
 
   onTapFeeling(e) {
+    
+    let index = e.currentTarget.dataset.index
+    let isCurrentlyFlipped = e.currentTarget.dataset.isflipped === undefined ? false : e.currentTarget.dataset.isflipped
+    let styles = []
 
+    // Make other cards back to their places
+    for (let i = 0; i < this.data.feelings.length; i++) {
+      let item = {
+        x: 0,
+        y: 0,
+        z: 0,
+        isFlipped: false
+      }
+      styles[i] = item
+    }
+
+    // Flip the card you just tapped
+    styles[index] = {
+      x: 0,
+      y: 0,
+      z: 9999,
+      isFlipped: !isCurrentlyFlipped
+    }
+
+    this.setData({
+      feelingStyles: styles
+    })
   },
 
   // Save today's feeling to localStorage

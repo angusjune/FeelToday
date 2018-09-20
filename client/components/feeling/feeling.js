@@ -1,11 +1,23 @@
-// components/feeling.js
+const util = require('../../utils/util.js')
+
+
 Component({
   /**
    * 组件的属性列表
    */
   properties: {
-    feeling: Object,
+    feeling: {
+      type: Object,
+    },
 
+    isFlipped: {
+      type: Boolean,
+      value: false,
+    }
+  },
+
+  options: {
+    addGlobalClass: true,
   },
 
   /**
@@ -15,14 +27,19 @@ Component({
     isFlipped: false,
   },
 
+  lifetimes: {
+    ready () {
+      let timestamp = this.data.feeling.time
+      // Set time to human language
+      this.setData({
+        dateFormatted: util.formatTime(new Date(timestamp))
+      })
+    },
+  },
+
   /**
    * 组件的方法列表
    */
   methods: {
-    tapFeeling (e) {
-      this.setData({
-        isFlipped: !this.data.isFlipped
-      })
-    },
   }
 })

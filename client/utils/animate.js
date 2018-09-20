@@ -80,7 +80,12 @@ function animatePoint(args) {
   loop()
 }
 
+function animateColorAlpha(args) {
+
+}
+
 module.exports = {
   number: animateNumber,
   point: animatePoint,
+  colorAlpha: animateColorAlpha,
 }
