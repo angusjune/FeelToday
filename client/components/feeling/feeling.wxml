@@ -1,0 +1,27 @@
+<!--components/feeling.wxml-->
+<!-- <view class="history__feeling " hover-class="view-hover" bindtap="tapFeeling" data-time="{{feeling.time}}"> -->
+  <view class="feeling {{isFlipped ? 'feeling--flipped' : ''}}" hover-class="view-hover" bindtap="tapFeeling" data-time="{{feeling.time}}">
+
+    <view class="card-container">
+      <view class="card">
+
+        <view class="card__front">
+          <view class="feeling__content mood--{{feeling.mood}}">
+            <image class="feeling__img" src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />
+            <view wx:if="{{feeling.say != ''}}" class="feeling__say"></view>
+          </view>
+        </view>
+
+        <view class="card__back">
+          <view class="feeling__details mood--{{feeling.mood}}">
+            <view class="feeling__date">{{dateFormatted}}</view>
+            <view wx:if="{{feeling.say != ''}}" class="feeling__say">{{feeling.say}}</view>
+            <view wx:else class="feeling__say feeling__say--empty">Nothing to say</view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+
+  </view>
+<!-- </view> -->

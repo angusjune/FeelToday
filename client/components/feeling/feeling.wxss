@@ -1,0 +1,114 @@
+/* components/feeling.wxss */
+@import "/app.wxss";
+
+
+.feeling {
+  width: 100%;
+  height: 100%;
+}
+
+.feeling__content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* padding-top: 54rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center; */
+}
+
+.feeling__img {
+  width: 100rpx;
+  height: 100rpx;
+  position: absolute;
+  top: 50rpx;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.feeling__say, .feeling__say:before, .feeling__say:after {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background-color: #FFF;
+}
+
+.feeling__say {
+  position: absolute;
+  top: 190rpx;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.feeling__say:before {
+  content: '';
+  position: absolute;
+  left: -22rpx;
+}
+
+.feeling__say:after {
+  content: '';
+  position: absolute;
+  right: -22rpx;
+}
+
+.feeling__details {
+  border-radius: 16rpx;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1), 0 16rpx 40rpx rgba(0, 0, 0, 0.1);
+}
+
+
+
+.card {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card-container {
+  perspective: 960rpx;
+}
+
+.card-container, .card__front, .card__back {
+  width: 242rpx;
+  height: 242rpx;
+}
+
+.card__front, .card__back {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.card__front {
+  top: 0;
+  left: 0;
+}
+
+.card__back {
+  top: 0;
+  left: 0;
+  /* top: 50%;
+  left: 50%;
+  margin: -240rpx 0 0 -280rpx; */
+  transition: all linear 0.4s;
+  transform: rotateY(180deg);
+}
+
+
+
+
+.feeling.feeling--flipped {
+  z-index: 999;
+}
+
+.feeling.feeling--flipped .card {
+  transform: rotateY(180deg);
+}
+
+.feeling.feeling--flipped .card__back {
+  /* width: 480rpx;
+  height: 560rpx; */
+  transform: rotateY(180deg) scale(2);
+}

@@ -17,7 +17,6 @@ Page({
   data: {
     isAnimating: false,
     feelings: [],
-    moodName: 'calm',
     moodId: 3,
     showActions: true,
     showHistory: false,
@@ -29,6 +28,7 @@ Page({
   },
 
   onLoad() {
+
     this.drawFace(currentFaceParam)
     this.drawMood(3) // Default mood Id is 3
 
@@ -37,6 +37,15 @@ Page({
 
     this.animation = animation
     this.imgAnimation = imgAnimation
+
+    let that = this
+    wx.getSystemInfo ({
+      success: (res) => {
+        // Treating iPhone X specially
+        let model = res.model.indexOf('iPhone X') > -1 ? 'iPhone X' : res.model
+        that.setData ({ model: model })
+      }
+    })
 
 
     // Set date
@@ -55,8 +64,6 @@ Page({
   },
 
   onShow() {
-    let menuRect = wx.getMenuButtonBoundingClientRect()
-    console.log(menuRect)
 
     if (app.globalData.feelings.length > 0) {
       this.setData({
@@ -67,7 +74,7 @@ Page({
         if (res != {}) {
           // If feelings data exists
           this.setData({
-            moodName: MOODS[res.mood].name,
+            // moodName: MOODS[res.mood].name,
             moodId: res.mood,
             sayText: res.say,
             sayTextTrimmed: util.subText(res.say),
@@ -76,6 +83,11 @@ Page({
         }
       })
     }
+  },
+
+  
+  onShareAppMessage() {
+
   },
 
 
@@ -240,8 +252,68 @@ Page({
     let endParam = MOODS[moodId].param
     this.animateFace(endParam, 10, 10, this.setFaceParam)
     this.setData({
-      moodName: MOODS[moodId].name,
       moodId: moodId,
+    })
+  },
+
+  showFace() {
+    this.drawFace(currentFaceParam)
+  },
+
+  hideFace() {
+    draw.clear('mainCanvas', CANVAS_SIZE)
+  },
+
+  showActions() {
+    this.setData({ showActions: true })
+  },
+
+  hideActions() {
+    this.setData({ showActions: false })
+  },
+
+  showMask() {
+    this.setData({ showMask: true })
+  },
+
+  hideMask() {
+    this.setData({ showMask: false })
+  },
+
+  showHistory() {
+    // this.setData({ showHistory: true })
+    this.showMask()
+    this.hideFace()
+
+    let animation = wx.createAnimation({
+      duration: 400,
+      timingFunction: 'ease-out',
+    })
+    this.animation = animation
+
+    animation.translateY('0%').step()
+
+    this.setData({
+      historyAnimation: animation.export()
+    })
+
+  },
+
+  hideHistory() {
+    // this.setData({ showHistory: false })
+    this.hideMask()
+    this.showFace()
+
+    let animation = wx.createAnimation({
+      duration: 400,
+      timingFunction: 'ease-out',
+    })
+    this.animation = animation
+
+    animation.translateY('110%').step()
+
+    this.setData({
+      historyAnimation: animation.export()
     })
   },
 
@@ -267,41 +339,49 @@ Page({
     }
   },
 
+  onHistoryTransitionEnd(e) {
+    console.log('transition end')
+  },
+
 
   onTouchMoveFace(e) {
     this.uiChange(e)
   },
 
   onTouchEndFace(e) {
-    this.setData({
-      showActions: true,
-    })
+    this.showActions()
   },
 
   onTapFace(e) {
     this.uiChange(e)
-    this.setData({
-      showActions: true,
-    })
+    this.showActions()
   },
 
   onTapConfirmMood () {
     this.saveFeelingToStorage()
+    this.hideFace()
     this.animateMood()
   },
 
+  onMoodAnimationEnd() {
+    this.showFace()
+    console.log('end')
+  },
 
   onTapShowSay() {
     this.setData({
       showSay: true,
     })
-    draw.clear('mainCanvas', CANVAS_SIZE)
+    this.hideFace()
   },
 
   // On textarea change
   onSayInput(e) {
     let val = e.detail.value
-
+    
+    this.setData({
+      charCount: val.length
+    })
   },
 
   // Submitting "Got something to say"
@@ -314,15 +394,19 @@ Page({
       sayText: val,
       sayTextTrimmed: util.subText(val)
     })
-    this.drawFace(currentFaceParam)
+    this.showFace()
   },
 
-  // Show history mood list
   onTapShowHistory() {
-    this.setData({
-      showHistory: !this.data.showHistory,
-      showActions: this.data.showHistory,
-    })
+    this.showHistory()
+  },
+
+  onTapHideHistory() {
+    this.hideHistory()
+  },
+
+  onTapFeeling(e) {
+
   },
 
   // Save today's feeling to localStorage
@@ -382,31 +466,16 @@ Page({
 
 
   animateMood() {
-    this.animation.opacity(1).width('120rpx').height('120rpx').left('315rpx').top('543rpx').step({duration: 600, timingFunction: 'ease'})
-    this.animation.left('60rpx').top('1026rpx').step({duration: 650, delay: 50, timingFunction: 'ease'})
-    this.animation.opacity(0).step({duration: 200, delay: 700})
 
-    this.imgAnimation.width('100rpx').height('100rpx').step({duration: 600, timingFunction: 'ease'})
+    this.animation.opacity(1).step({duration: 300})
+    this.animation.translateY(500).rotate(20).step({duration: 650, delay: 300,  timingFunction: 'ease-in'})
+
+    this.animation.opacity(0).step()
+    this.animation.rotate(0).translateY(0).step()
 
     this.setData({
       animationData: this.animation.export(),
-      imgAnimation: this.imgAnimation.export()
     })
-
-    setTimeout(() => {
-      this.setData({
-        showHistory: true,
-        showActions: false,
-      })
-    }, 600)
-
-    setTimeout(() => {
-
-    }, 3000)
   },
-
-
-
-
 
 })
