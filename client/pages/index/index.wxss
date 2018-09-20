@@ -5,19 +5,6 @@ page {
   background-color: #0D0D0D;
 }
 
-.wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 750rpx;
-  height: 1334rpx;
-  display: block !important;
-}
-
-.main--collapse {
-  transform: translateY(-240rpx);
-}
-
 .canvas {
   width: 120px;
   height: 120px;
@@ -39,20 +26,16 @@ page {
   position: absolute;
   top: 0;
   left: 0;
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: center; */
   transition: all linear 0.5s;
 }
 
 .face {
-  /* position: relative; */
-  /* top: -40rpx; */
   position: absolute;
   top: 35%;
   left: 50%;
   transform: translateX(-50%);
 }
+
 
 
 .actions {
@@ -125,7 +108,6 @@ page {
   background-color: rgba(0, 0 ,0, 0.8);
   transition: opacity 0.2s 0.15s ease;
   will-change: opacity;
-  /* backdrop-filter: blur(10px); */
 }
 
 .say--hidden {
@@ -142,11 +124,6 @@ page {
   height: 370rpx;
   margin: 60rpx;
 }
-
-/*.say--hidden .say__textarea {
-  visibility: hidden;
-  pointer-events: none;
-}*/
 
 .say__textarea.textarea-placeholder {
   color: rgba(0, 0, 0, 0.3);
@@ -185,6 +162,7 @@ page {
 .say--hidden .say__submit {
   transform: scale(0);
 }
+
 
 
 .history {
@@ -244,10 +222,6 @@ page {
 
 .history__feeling:nth-child(3) .feeling__content {
   border-top-right-radius: 16rpx;
-}
-
-.history__feeling--thumb {
-  overflow: hidden;
 }
 
 .mood--animate {
