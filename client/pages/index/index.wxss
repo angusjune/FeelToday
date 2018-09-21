@@ -106,7 +106,7 @@ page {
   left: 0;
   padding-top: 120rpx;
   background-color: rgba(0, 0 ,0, 0.8);
-  transition: opacity 0.2s 0.15s ease;
+  transition: opacity 0.15s 0.15s ease;
   will-change: opacity;
 }
 
@@ -148,9 +148,23 @@ page {
   position: absolute;
   /* top: 430rpx; */
   right: 60rpx;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, opacity 0.15s linear;
   z-index: 9;
 }
+
+.say__submit.button-hover {
+  transform: scale(0.85);
+  filter: brightness(0.8);
+}
+
+.say__submit.say__submit--disabled {
+  opacity: 0.3;
+}
+
+.say--hidden .say__submit {
+  transform: scale(0);
+}
+
 
 .say__char-count {
   position: absolute;
@@ -163,15 +177,6 @@ page {
 .say__char-count--error {
 
 }
-
-.say__submit.button-hover {
-  transform: scale(0.85);
-}
-
-.say--hidden .say__submit {
-  transform: scale(0);
-}
-
 
 
 .history {
@@ -210,6 +215,8 @@ page {
   width: 100%;
   height: 100%;
   margin: 6rpx 0 6rpx 6rpx;
+  padding-bottom: 6rpx;
+
 }
 
 .scroll__content {
@@ -223,6 +230,7 @@ page {
 .history__feeling {
   width: 242rpx;
   height: 242rpx;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .history__feeling:nth-child(1) .feeling__content {
@@ -252,4 +260,5 @@ page {
 .mood--animate__feeling-img {
   width: 100%;
   height: 100%;
+  background-size: cover;
 }

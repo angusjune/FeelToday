@@ -6,10 +6,12 @@ const moods = require('./moods.js')
 const app = getApp()
 
 // const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
-const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms, debug only
+const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = moods.moods
-const GAP  = Math.floor(603/MOODS.length) // Magic number 603
+const GAP  = Math.floor(603/MOODS.length) // Magic number 603, should be changed to device height?
+
+const SAY__MAX = 84 // The max length of "say"
 
 var currentFaceParam = MOODS[3].param
 
@@ -21,14 +23,14 @@ Page({
     showActions: true,
     showHistory: false,
     isHistoryFlipped: false, // Is there any history card been flipped?
+    historyScrollTop: 0,
     sayText: '',
     sayTextTrimmed: '', // sayText after substr
+    sayMaxLength: SAY__MAX,
     charCount: 0, // How many characters are there in "say" now?
-
   },
 
-  onLoad() {
-
+  onLoad(param) {
     this.drawFace(currentFaceParam)
     this.drawMood(3) // Default mood Id is 3
 
@@ -47,7 +49,6 @@ Page({
       }
     })
 
-
     // Set date
     let date = util.formatTime(new Date(Date.now() + DATE_OFFSET))
     // Get pill menu position to determine date position
@@ -60,11 +61,9 @@ Page({
         height: menuRect.height
       }
     })
-
   },
 
   onShow() {
-
     if (app.globalData.feelings.length > 0) {
       this.setData({
         feelings: app.globalData.feelings.reverse(), // From new to old
@@ -74,7 +73,6 @@ Page({
         if (res != {}) {
           // If feelings data exists
           this.setData({
-            // moodName: MOODS[res.mood].name,
             moodId: res.mood,
             sayText: res.say,
             sayTextTrimmed: util.subText(res.say),
@@ -87,7 +85,11 @@ Page({
 
   
   onShareAppMessage() {
-
+    let that = this
+    return {
+      title: 'I am feeling:',
+      path: `/pages/index/index?moodId=${that.moodId}&sayText=${that.sayText}&isShare=true`
+    }
   },
 
 
@@ -113,8 +115,8 @@ Page({
     draw.face('mainCanvas', canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLeftY, lipLeftCp1X, lipLeftCp1Y, lipLeftCp2X, lipLeftCp2Y, lipBottomY, lipBottomCp1X, color)
   },
 
+  // animateFace() animates the process between the former and the later face
   animateFace (endParam, segment, time, func, colorParam) {
-
     if (colorParam === undefined) {
       colorParam = {
         start: 1,
@@ -267,18 +269,17 @@ Page({
     loop()
   },
 
-  // The diffrence between drawFace() and drawMood() is that the latter animates the changing process between the former face and the current face
+  // The diffrence between drawFace() and drawMood() is that the latter also animates the background color
   drawMood(moodId) {
     let endParam = MOODS[moodId].param
     this.animateFace(endParam, 10, 10, this.setFaceParam)
-    this.setData({
-      moodId: moodId,
-    })
+    this.setData({ moodId: moodId })
   },
 
   showFace() {
     // this.drawFace(currentFaceParam)
     this.animateFace(currentFaceParam, 10, 10,this.setFaceParam, {start: 0, end: 1})
+    console.log('face showed')
   },
 
   hideFace() {
@@ -302,78 +303,62 @@ Page({
     this.setData({ showMask: false })
   },
 
+  showSay() {
+    this.setData({ showSay: true, })
+    this.hideFace()
+    this.hideActions()
+  },
+
+  hideSay() {
+    this.setData({ showSay: false, })
+    this.showFace()
+    this.showActions()
+  },
+
   showHistory() {
     this.setData({ showHistory: true })
     this.showMask()
     this.hideFace()
     this.hideActions()
-
-    // let animation = wx.createAnimation({
-    //   duration: 400,
-    //   timingFunction: 'ease-out',
-    // })
-    // this.animation = animation
-
-    // animation.translateY('0%').step()
-
-    // this.setData({
-    //   historyAnimation: animation.export()
-    // })
-
   },
 
   hideHistory() {
     this.setData({ showHistory: false })
     this.hideMask()
 
+    //@TODO setTimeout() is not a flexible solution
     setTimeout(()=>{
       this.showFace()
       this.showActions()
     }, 300)
-    
-
-    // let animation = wx.createAnimation({
-    //   duration: 400,
-    //   timingFunction: 'ease-out',
-    // })
-    // this.animation = animation
-
-    // animation.translateY('110%').step()
-
-    // this.setData({
-    //   historyAnimation: animation.export()
-    // })
   },
 
-  uiChange(e) {
-    if (this.data.showHistory) {
-      this.setData({
-        showHistory: false,
-        showActions: true,
-      })
-    } else {
-      let touchY = e.touches[0].clientY
+  faceChange(e) {
+    this.hideActions()
 
-      this.setData({
-        showActions: false,
-      })
-
-      for (let i = 0; i < MOODS.length; i++) {
-        if (util.isBetween(touchY, [i * GAP, (i + 1) * GAP])) {
-          this.drawMood(i)
-          return
-        }
+    let touchY = e.touches[0].clientY
+    for (let i = 0; i < MOODS.length; i++) {
+      if (util.isBetween(touchY, [i * GAP, (i + 1) * GAP])) {
+        this.drawMood(i)
+        return
       }
     }
   },
 
-  onHistoryTransitionEnd(e) {
-    console.log('transition end')
+  animateMoodSave() {
+    this.animation.opacity(1).step({duration: 50})
+    this.animation.translateY(500).rotate(20).step({duration: 850, delay: 300,  timingFunction: 'cubic-bezier(0.6, -0.28, 0.735, 0.045)'})
+
+    this.animation.opacity(0).step()
+    this.animation.rotate(0).translateY(0).step()
+
+    this.setData({
+      animationData: this.animation.export(),
+    })
   },
 
-
   onTouchMoveFace(e) {
-    this.uiChange(e)
+    this.faceChange(e)
   },
 
   onTouchEndFace(e) {
@@ -381,26 +366,26 @@ Page({
   },
 
   onTapFace(e) {
-    this.uiChange(e)
+    this.faceChange(e)
     this.showActions()
   },
 
-  onTapConfirmMood () {
+  onTapConfirmMood() {
+    let that = this
     this.saveFeelingToStorage()
     this.hideFace()
-    this.animateMood()
-  },
+    this.hideActions()
+    this.animateMoodSave()
 
-  onMoodAnimationEnd() {
-    this.showFace()
-    console.log('end')
+    //@TODO setTimeout() is not a flexible solution
+    setTimeout(() => {
+      that.showFace()
+      that.showActions()
+    }, 1600)
   },
 
   onTapShowSay() {
-    this.setData({
-      showSay: true,
-    })
-    this.hideFace()
+    this.showSay()
   },
 
   // On textarea change
@@ -413,16 +398,15 @@ Page({
   },
 
   // Submitting "Got something to say"
-  onSubmitSay (e) {
+  onSubmitSay(e) {
     let val = e.detail.value.textarea
 
     this.setData({
-      showSay: false,
-      showActions: true,
       sayText: val,
       sayTextTrimmed: util.subText(val)
     })
-    this.showFace()
+    
+    this.hideSay()
   },
 
   onTapShowHistory() {
@@ -433,11 +417,24 @@ Page({
     this.hideHistory()
   },
 
-  onTapFeeling(e) {
-    
+  onHistoryScroll(e) {
+    let scrollTop = e.detail.scrollTop
+    this.setData({
+      historyScrollTop: scrollTop
+    })
+  },
+
+  onTapFeeling(e) {    
     let index = e.currentTarget.dataset.index
     let isCurrentlyFlipped = e.currentTarget.dataset.isflipped === undefined ? false : e.currentTarget.dataset.isflipped
     let styles = []
+
+    let offsetLeft = e.currentTarget.offsetLeft
+    let offsetTop = e.currentTarget.offsetTop
+
+    // How far should the card move to get to the center
+    let translateX = 124 - offsetLeft
+    let translateY = 124 - offsetTop + this.data.historyScrollTop
 
     // Make other cards back to their places
     for (let i = 0; i < this.data.feelings.length; i++) {
@@ -452,8 +449,8 @@ Page({
 
     // Flip the card you just tapped
     styles[index] = {
-      x: 0,
-      y: 0,
+      x: isCurrentlyFlipped === true ? 0 : translateX,
+      y: isCurrentlyFlipped === true ? 0 : translateY,
       z: 9999,
       isFlipped: !isCurrentlyFlipped
     }
@@ -515,20 +512,6 @@ Page({
           say: feeling.say
         })
       }
-    })
-  },
-
-
-  animateMood() {
-
-    this.animation.opacity(1).step({duration: 300})
-    this.animation.translateY(500).rotate(20).step({duration: 650, delay: 300,  timingFunction: 'ease-in'})
-
-    this.animation.opacity(0).step()
-    this.animation.rotate(0).translateY(0).step()
-
-    this.setData({
-      animationData: this.animation.export(),
     })
   },
 

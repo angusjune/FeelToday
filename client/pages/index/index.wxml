@@ -31,7 +31,7 @@
 
     <view class="say__submit-wrapper">
       <!-- Why max length is 84? Because 42*2 = 84 -->
-      <view class="say__char-count">{{charCount}}/84</view>
+      <view class="say__char-count">{{charCount}}/{{sayMaxLength}}</view>
       <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
     </view>
 
@@ -40,7 +40,7 @@
 
 
 <!-- Mood history -->
-<view class="history {{showHistory ? '' : 'history--hidden'}}" animation="{{historyAnimation1}}" bindtransitionend="onHistoryTransitionEnd">
+<view class="history {{showHistory ? '' : 'history--hidden'}}" animation="{{historyAnimation1}}">
 
   <view class="history__close" bindtap="onTapHideHistory">
     <text class="icon icon--24 icon--chevron-down"></text>
@@ -48,11 +48,13 @@
 
   <view class="history__modal">
     <block wx:if="{{feelings.length > 0}}">
-      <scroll-view class="history__scroll" scroll-y scroll-with-animation>
+      <scroll-view class="history__scroll" scroll-y scroll-with-animation bindscroll="onHistoryScroll">
         <view class="scroll__content">
 
           <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
+          
             <feeling class="history__feeling" feeling="{{feeling}}" isFlipped="{{feelingStyles[index].isFlipped}}" bindtap="onTapFeeling" data-index="{{index}}" data-isflipped="{{feelingStyles[index].isFlipped}}" style="z-index: {{feelingStyles[index].z}}; transform: translateX({{feelingStyles[index].x}}px) translateY({{feelingStyles[index].y}}px)"></feeling>
+
           </block>
 
         </view>
@@ -67,6 +69,6 @@
 </view>
 
 <!-- Mood animation when confirm mood button is clicked -->
-<!-- <cover-view class="mood mood--{{moodId}} mood--animate" animation="{{animationData}}" bindanimationend="onMoodAnimationEnd" bindtransitionend="onMoodAnimationEnd">
-  <cover-image class="mood--animate__feeling-img" src="/img/mood-{{moodId}}@2x.png" mode="aspectFill" />
-</cover-view> -->
+<view class="mood mood--{{moodId}} mood--animate {{}}" animation="{{animationData}}">
+  <view class="mood--animate__feeling-img" style="background-image:url(http://cdn.popppular.com/feeltoday/mood-{{moodId}}@2x.png?v=1)"></view>
+</view>
