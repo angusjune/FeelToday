@@ -6,8 +6,7 @@
 
         <view class="card__front">
           <view class="feeling__content mood--{{feeling.mood}}">
-            <!-- @TODO change to view -->
-            <image class="feeling__img" src="/img/mood-{{feeling.mood}}@2x.png" mode="aspectFill" />
+            <view class="feeling__img" style="background-image:url(/img/mood-{{feeling.mood}}@2x.png)"></view>
             <view wx:if="{{feeling.say != ''}}" class="feeling__say-indicator"></view>
           </view>
         </view>
