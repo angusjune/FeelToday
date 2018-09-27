@@ -115,7 +115,17 @@ Page({
     draw.face('mainCanvas', canvasSize, lipTopY, lipTopCp1X, lipLeftX, lipLeftY, lipLeftCp1X, lipLeftCp1Y, lipLeftCp2X, lipLeftCp2Y, lipBottomY, lipBottomCp1X, color)
   },
 
-  // animateFace() animates the process between the former and the later face
+
+  /**
+   * @description Animates the process between the former and the later face
+   * @param {Object} endParam 需要变为的脸的最终参数
+   * @param {number} [segment] 需要分几段去完成这个变化，数值越大，变化过程越流畅
+   * @param {number} [time] 每段之间的间隔时间，单位为毫秒，数值越小，变化越快
+   * @param {Function} [func] 每次变化后的回调
+   * @param {Object} [colorParam] 脸的透明度值参数
+   * @param {number} colorParam.start 0-1 之间取值
+   * @param {number} colorParam.end
+   */
   animateFace (endParam, segment, time, func, colorParam) {
     if (colorParam === undefined) {
       colorParam = {
