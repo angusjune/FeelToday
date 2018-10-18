@@ -8,5 +8,6 @@
     "navigationBarTitleText": "Feel Today",
     "navigationBarTextStyle":"light",
     "navigationStyle": "custom"
-  }
+  },
+  "cloud": "true"
 }

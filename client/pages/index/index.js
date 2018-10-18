@@ -30,7 +30,7 @@ Page({
     charCount: 0, // How many characters are there in "say" now?
   },
 
-  onLoad(param) {
+  onLoad(query) {
     this.drawFace(currentFaceParam)
     this.drawMood(3) // Default mood Id is 3
 

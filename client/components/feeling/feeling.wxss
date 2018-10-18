@@ -90,7 +90,7 @@
   perspective: 960rpx;
 }
 
-.card-container, .card__front, .card__back {
+.card-container, .card__front, .card__back{
   width: 242rpx;
   height: 242rpx;
 }
@@ -103,6 +103,7 @@
 .card__front {
   top: 0;
   left: 0;
+  transition: opacity 0.1s  0.15s linear;
 }
 
 .card__back {
@@ -126,4 +127,8 @@
   /* width: 480rpx;
   height: 560rpx; */
   transform: rotateY(180deg) scale(2);
+}
+
+.feeling.feeling--flipped .card__front {
+  opacity: 0;
 }

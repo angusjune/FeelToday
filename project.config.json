@@ -14,10 +14,9 @@
 	"libVersion": "2.3.0",
 	"appid": "wx53a906d1cddbe94e",
 	"projectname": "FeelToday",
-	"client": "./client",
-	"svr": "./server",
-	"miniprogramRoot": "./client",
-	"qcloudRoot": "./server",
+	"client": "client/",
+	"miniprogramRoot": "client/",
+	"cloudfunctionRoot": "functions/",
 	"isGameTourist": false,
 	"condition": {
 		"search": {
