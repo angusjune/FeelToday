@@ -61,34 +61,42 @@ Page({
         height: menuRect.height
       }
     })
+
+    this.setFeelingsData()
   },
-
-  onShow() {
-    if (app.globalData.feelings.length > 0) {
-      this.setData({
-        feelings: app.globalData.feelings.reverse(), // From new to old
-      })
-
-      this.getCurrentFeeling(app.globalData.feelings, (res) => {
-        if (res != {}) {
-          // If feelings data exists
-          this.setData({
-            moodId: res.mood,
-            sayText: res.say,
-            sayTextTrimmed: util.subText(res.say),
-          })
-          this.drawMood(res.mood)
-        }
-      })
-    }
-  },
-
   
   onShareAppMessage() {
     let that = this
     return {
       title: 'I am feeling:',
       path: `/pages/index/index?moodId=${that.moodId}&sayText=${that.sayText}&isShare=true`
+    }
+  },
+
+  // Load feelings from cloud and set feeling data
+  setFeelingsData() {
+    let that = this
+    // Set history feelings
+    app.feelingsReadyCallBack = () => {
+      console.log('feelings data set')
+
+      if (app.globalData.feelings.length > 0) {
+        that.setData({
+          feelings: app.globalData.feelings.reverse(), // From new to old
+        })
+
+        that.getCurrentFeeling(app.globalData.feelings, (res) => {
+          if (res != {}) {
+            // If feelings data exists
+            that.setData({
+              moodId: res.moodId,
+              sayText: res.say,
+              sayTextTrimmed: util.subText(res.say),
+            })
+            that.drawMood(res.moodId)
+          }
+        })
+      }
     }
   },
 
@@ -287,13 +295,10 @@ Page({
   },
 
   showFace() {
-    // this.drawFace(currentFaceParam)
     this.animateFace(currentFaceParam, 10, 10,this.setFaceParam, {start: 0, end: 1})
-    console.log('face showed')
   },
 
   hideFace() {
-    // draw.clear('mainCanvas', CANVAS_SIZE)
     this.animateFace(currentFaceParam, 10, 10,this.setFaceParam, {start: 1, end: 0})
   },
 
@@ -476,7 +481,7 @@ Page({
 
     let feelings = this.data.feelings.reverse() // From old to new
     let newFeeling  = {
-      mood: this.data.moodId,
+      moodId: this.data.moodId,
       say: this.data.sayText,
       time: time,
     }
@@ -492,21 +497,12 @@ Page({
       }
     })
 
+    // Only add feeling if it is not recorded today
     if (!isFeelingExist) {
-      feelings.push(newFeeling)
+      app.addFeeling(newFeeling)
     }
 
-    wx.setStorage({
-      key: 'feelings',
-      data: feelings,
-      success: (res) => {
-        console.log('Feeling stored: ', res)
-        this.setData({ feelings: feelings.reverse() })
-      },
-      fail: (err) => {
-        console.error('Handle rejected promise here: ', err)
-      }
-    })
+
   },
 
 

@@ -5,14 +5,14 @@
       <view class="card">
 
         <view class="card__front">
-          <view class="feeling__content mood--{{feeling.mood}}">
-            <view class="feeling__img" style="background-image:url(http://cdn.popppular.com/feeltoday/mood-{{feeling.mood}}@2x.png?v=1)"></view>
+          <view class="feeling__content mood--{{feeling.moodId}}">
+            <view class="feeling__img" style="background-image:url(http://cdn.popppular.com/feeltoday/mood-{{feeling.moodId}}@2x.png?v=1)"></view>
             <view wx:if="{{feeling.say != ''}}" class="feeling__say-indicator"></view>
           </view>
         </view>
 
         <view class="card__back">
-          <view class="feeling__details mood--{{feeling.mood}}">
+          <view class="feeling__details mood--{{feeling.moodId}}">
             <view class="feeling__date">{{dateFormatted}}</view>
             <view wx:if="{{feeling.say != ''}}" class="feeling__say feeling__say--got-sth">{{feeling.say}}</view>
             <view wx:else class="feeling__say feeling__say--empty">Nothing to say</view>
