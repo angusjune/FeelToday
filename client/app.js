@@ -1,5 +1,7 @@
 const config = require('./config.js')
 
+const MAX_LIMIT = 20
+
 // Initial cloud
 wx.cloud.init({
   traceUser: true,
@@ -12,6 +14,7 @@ App({
   globalData: {
     feelings: [],
     openId: '',
+    dataPageCount: 0,
   },
 
   onLaunch () {
@@ -27,20 +30,23 @@ App({
 
   /**
    * @description 在云开发数据库中获取指定用户的 feeling
-   * @param {String} dbCollection
    * @param {String} openId 
+   * @param {Number} page
    */
-  getFeelings (openId) {
+  getFeelings (openId, page) {
+    if (page === undefined) { page = 0 }
+
     collection.where({
       _openid: openId, 
     })
-    .get({
-      success: (res) => {
-        this.globalData.feelings = res.data || []
+    .skip(page * MAX_LIMIT)
+    .limit(MAX_LIMIT)
+    .get()
+    .then((res) => {
+      this.globalData.feelings = res.data || []
 
-        if (this.feelingsReadyCallBack) {
-          this.feelingsReadyCallBack(res)
-        }
+      if (this.feelingsReadyCallBack) {
+        this.feelingsReadyCallBack(res)
       }
     })
   },
@@ -54,7 +60,6 @@ App({
    * @param {Function} callback
    */
   addFeeling (content, callback) {
-    console.log(callback)
     collection.add({
       data: {
         moodId: content.moodId,
@@ -64,9 +69,24 @@ App({
     })
     .then((res) => {
       console.log(res)
-      callback()
+      if (typeof callback === 'function') {
+        callback()
+      }
     })
   },
 
+  /**
+   * 
+   * @param {String} id 
+   * @param {Object} data 
+   */
+  updateFeeling (id, data) {
+    collection.doc(id).update({
+      data: data,
+    })
+    .then((res) => {
+      console.log(res)
+    })
+  }
 
 })

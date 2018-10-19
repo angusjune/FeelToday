@@ -5,8 +5,8 @@ const moods = require('./moods.js')
 
 const app = getApp()
 
-// const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
-const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
+const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
+// const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = moods.moods
 const GAP  = Math.floor(603/MOODS.length) // Magic number 603, should be changed to device height?
@@ -92,6 +92,7 @@ Page({
               moodId: res.moodId,
               sayText: res.say,
               sayTextTrimmed: util.subText(res.say),
+              charCount: res.say.length,
             })
             that.drawMood(res.moodId)
           }
@@ -430,6 +431,19 @@ Page({
 
   onTapHideHistory() {
     this.hideHistory()
+
+    // Flip all the cards back
+    let styles = []
+    for (let i = 0; i < this.data.feelings.length; i++) {
+      let item = {
+        x: 0,
+        y: 0,
+        z: 0,
+        isFlipped: false
+      }
+      styles[i] = item
+    }
+    this.setData({ feelingStyles: styles })
   },
 
   onHistoryScroll(e) {
@@ -437,6 +451,10 @@ Page({
     this.setData({
       historyScrollTop: scrollTop
     })
+  },
+
+  onHistoryScrollToLower() {
+    
   },
 
   onTapFeeling(e) {    
@@ -492,8 +510,8 @@ Page({
     feelings.forEach((feeling, index) => {
       if (now - feeling.time < 24 * 60 * 60 * 1000) {
         isFeelingExist = true
-        let index = feelings.indexOf(feeling)
-        feelings[index] = newFeeling // Replace it with the new feeling
+        // Update exist feeling
+        app.updateFeeling(feeling._id, newFeeling)
       }
     })
 
@@ -513,7 +531,7 @@ Page({
       if (now - feeling.time < 24 * 60 * 60 * 1000) {
         // Within 24 hours
         callback({
-          mood: feeling.mood,
+          moodId: feeling.moodId,
           time: feeling.time,
           say: feeling.say
         })

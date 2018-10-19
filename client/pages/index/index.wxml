@@ -27,7 +27,7 @@
 <view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="onSubmitSay">
 
-    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." bindinput="onSayInput" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" data-is="coming" />
+    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." value="{{sayText}}" bindinput="onSayInput" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" data-is="coming" />
 
     <view class="say__submit-wrapper">
       <!-- Why max length is 84? Because 42*2 = 84 -->
@@ -48,7 +48,7 @@
 
   <view class="history__modal">
     <block wx:if="{{feelings.length > 0}}">
-      <scroll-view class="history__scroll" scroll-y scroll-with-animation bindscroll="onHistoryScroll">
+      <scroll-view class="history__scroll" scroll-y scroll-with-animation bindscroll="onHistoryScroll" bindscrolltolower="onHistoryScrollToLower">
         <view class="scroll__content">
 
           <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
