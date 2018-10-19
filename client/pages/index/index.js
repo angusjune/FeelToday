@@ -73,35 +73,6 @@ Page({
     }
   },
 
-  // Load feelings from cloud and set feeling data
-  setFeelingsData() {
-    let that = this
-    // Set history feelings
-    app.feelingsReadyCallBack = () => {
-      console.log('feelings data set')
-
-      if (app.globalData.feelings.length > 0) {
-        that.setData({
-          feelings: app.globalData.feelings.reverse(), // From new to old
-        })
-
-        that.getCurrentFeeling(app.globalData.feelings, (res) => {
-          if (res != {}) {
-            // If feelings data exists
-            that.setData({
-              moodId: res.moodId,
-              sayText: res.say,
-              sayTextTrimmed: util.subText(res.say),
-              charCount: res.say.length,
-            })
-            that.drawMood(res.moodId)
-          }
-        })
-      }
-    }
-  },
-
-
   setFaceParam(faceParam) {
     currentFaceParam = faceParam
   },
@@ -520,8 +491,35 @@ Page({
       app.addFeeling(newFeeling)
     }
 
-
   },
+
+    // Load feelings from cloud and set feeling data
+    setFeelingsData() {
+      let that = this
+      // Set history feelings
+      app.feelingsReadyCallBack = () => {
+        console.log('feelings data set')
+  
+        if (app.globalData.feelings.length > 0) {
+          that.setData({
+            feelings: app.globalData.feelings.reverse(), // From new to old
+          })
+  
+          that.getCurrentFeeling(app.globalData.feelings, (res) => {
+            if (res != {}) {
+              // If today's feeling exists, set today's feeling
+              that.setData({
+                moodId: res.moodId,
+                sayText: res.say,
+                sayTextTrimmed: util.subText(res.say),
+                charCount: res.say.length,
+              })
+              that.drawMood(res.moodId)
+            }
+          })
+        }
+      }
+    },
 
 
   getCurrentFeeling(feelings, callback) {
