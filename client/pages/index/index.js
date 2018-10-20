@@ -5,8 +5,8 @@ const moods = require('./moods.js')
 
 const app = getApp()
 
-const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
-// const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
+// const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
+const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = moods.moods
 const GAP  = Math.floor(603/MOODS.length) // Magic number 603, should be changed to device height?
@@ -62,7 +62,10 @@ Page({
       }
     })
 
-    this.setFeelingsData()
+    app.userInfoReadyCallBack = () => {
+      console.log('fine: ' + app.globalData.openId)
+      app.getFeelings(app.globalData.openId, 0, that.setFeelingsData)
+    }
   },
   
   onShareAppMessage() {
@@ -425,7 +428,12 @@ Page({
   },
 
   onHistoryScrollToLower() {
-    
+    let page = app.globalData.dataPageCount++
+
+    app.getFeelings(app.globalData.openId)
+    this.setFeelingsData()
+
+
   },
 
   onTapFeeling(e) {    
@@ -468,7 +476,6 @@ Page({
   saveFeelingToStorage() {
     let time = Date.now()
 
-    let feelings = this.data.feelings.reverse() // From old to new
     let newFeeling  = {
       moodId: this.data.moodId,
       say: this.data.sayText,
@@ -478,7 +485,8 @@ Page({
     let now = Date.now() + DATE_OFFSET
     let isFeelingExist = false
 
-    feelings.forEach((feeling, index) => {
+    // To find if today's feeling already exist
+    this.data.feelings.forEach((feeling, index) => {
       if (now - feeling.time < 24 * 60 * 60 * 1000) {
         isFeelingExist = true
         // Update exist feeling
@@ -490,39 +498,38 @@ Page({
     if (!isFeelingExist) {
       app.addFeeling(newFeeling)
     }
-
   },
 
-    // Load feelings from cloud and set feeling data
-    setFeelingsData() {
-      let that = this
-      // Set history feelings
-      app.feelingsReadyCallBack = () => {
-        console.log('feelings data set')
-  
-        if (app.globalData.feelings.length > 0) {
+  // Load feelings from cloud and set feeling data
+  setFeelingsData(res) {
+    let data = res.data
+    console.log('feelings data set')
+    console.log(data)
+
+    let that = this
+
+    if (data.length > 0) {
+      this.setData({
+        feelings: this.data.feelings.push(data.reverse()), // From new to old
+      })
+
+      this.findCurrentFeeling(this.data.feelings, (res) => {
+        if (res != {}) {
+          // If today's feeling exists, set today's feeling
           that.setData({
-            feelings: app.globalData.feelings.reverse(), // From new to old
+            moodId: res.moodId,
+            sayText: res.say,
+            sayTextTrimmed: util.subText(res.say),
+            charCount: res.say.length,
           })
-  
-          that.getCurrentFeeling(app.globalData.feelings, (res) => {
-            if (res != {}) {
-              // If today's feeling exists, set today's feeling
-              that.setData({
-                moodId: res.moodId,
-                sayText: res.say,
-                sayTextTrimmed: util.subText(res.say),
-                charCount: res.say.length,
-              })
-              that.drawMood(res.moodId)
-            }
-          })
+          that.drawMood(res.moodId)
         }
-      }
-    },
+      })
+    }
+  },
 
 
-  getCurrentFeeling(feelings, callback) {
+  findCurrentFeeling(feelings, callback) {
     let now = Date.now() + DATE_OFFSET
 
     feelings.forEach((feeling) => {

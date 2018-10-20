@@ -23,17 +23,21 @@ App({
     })
     .then((res) => {
       this.globalData.openId = res.result.openId
-      this.getFeelings(res.result.openId)
+
+      if (this.userInfoReadyCallBack) {
+        this.userInfoReadyCallBack(res)
+      }
     })
     .catch(console.error)
   },
 
   /**
-   * @description 在云开发数据库中获取指定用户的 feeling
+   * @description 在云开发数据库中获取指定 openid 的 feeling
    * @param {String} openId 
-   * @param {Number} page
+   * @param {Number} [page]
+   * @param {Function} [callback]
    */
-  getFeelings (openId, page) {
+  getFeelings (openId, page, callback) {
     if (page === undefined) { page = 0 }
 
     collection.where({
@@ -43,34 +47,34 @@ App({
     .limit(MAX_LIMIT)
     .get()
     .then((res) => {
-      this.globalData.feelings = res.data || []
+      // this.globalData.feelings = res.data || []
 
-      if (this.feelingsReadyCallBack) {
-        this.feelingsReadyCallBack(res)
+      if (typeof callback === 'function') {
+        callback(res)
       }
     })
   },
 
   /**
    * 
-   * @param {Object} content 
-   * @param {Number} content.moodId
-   * @param {String} content.say
-   * @param {Number} content.time
-   * @param {Function} callback
+   * @param {Object} data 
+   * @param {Number} data.moodId
+   * @param {String} data.say
+   * @param {Number} data.time
+   * @param {Function} [callback]
    */
-  addFeeling (content, callback) {
+  addFeeling (data, callback) {
     collection.add({
       data: {
-        moodId: content.moodId,
-        say: content.say,
-        time: content.time,
+        moodId: data.moodId,
+        say: data.say,
+        time: data.time,
       },
     })
     .then((res) => {
-      console.log(res)
+      // console.log(res)
       if (typeof callback === 'function') {
-        callback()
+        callback(res)
       }
     })
   },
@@ -79,13 +83,17 @@ App({
    * 
    * @param {String} id 
    * @param {Object} data 
+   * @param {Function} [callback]
    */
-  updateFeeling (id, data) {
+  updateFeeling (id, data, callback) {
     collection.doc(id).update({
       data: data,
     })
     .then((res) => {
-      console.log(res)
+      // console.log(res)
+      if (typeof callback === 'function') {
+        callback(res)
+      }
     })
   }
 
