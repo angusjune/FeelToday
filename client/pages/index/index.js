@@ -63,7 +63,7 @@ Page({
     })
 
     app.userInfoReadyCallBack = () => {
-      console.log('fine: ' + app.globalData.openId)
+      console.log('openid: ' + app.globalData.openId)
       app.getFeelings(app.globalData.openId, 0, that.setFeelingsData)
     }
   },
@@ -337,7 +337,7 @@ Page({
 
   animateMoodSave() {
     this.animation.opacity(1).step({duration: 50})
-    this.animation.translateY(500).rotate(20).step({duration: 850, delay: 300,  timingFunction: 'cubic-bezier(0.6, -0.28, 0.735, 0.045)'})
+    this.animation.translateY(600).rotate(20).step({duration: 850, delay: 300,  timingFunction: 'cubic-bezier(0.6, -0.28, 0.735, 0.045)'})
 
     this.animation.opacity(0).step()
     this.animation.rotate(0).translateY(0).step()
@@ -428,12 +428,16 @@ Page({
   },
 
   onHistoryScrollToLower() {
+    let that = this
     let page = app.globalData.dataPageCount++
 
-    app.getFeelings(app.globalData.openId)
-    this.setFeelingsData()
-
-
+    app.getFeelings(app.globalData.openId, page, (res) => {
+      if (res.data.length > 0) {
+        that.setFeelingsData(res)
+      } else {
+        app.globalData.dataPageCount--
+      }
+    })
   },
 
   onTapFeeling(e) {    
@@ -474,6 +478,7 @@ Page({
 
   // Save today's feeling to localStorage
   saveFeelingToStorage() {
+    let that = this
     let time = Date.now()
 
     let newFeeling  = {
@@ -485,32 +490,38 @@ Page({
     let now = Date.now() + DATE_OFFSET
     let isFeelingExist = false
 
+    // What to do after adding or updating today's feeling
+    _handleNewFeeling = (res) => {
+      // Reset feelings data and page count
+      that.data.feelings = []
+      app.globalData.dataPageCount = 0
+
+      app.getFeelings(app.globalData.openId, 0, that.setFeelingsData)
+    }
+
     // To find if today's feeling already exist
     this.data.feelings.forEach((feeling, index) => {
       if (now - feeling.time < 24 * 60 * 60 * 1000) {
         isFeelingExist = true
         // Update exist feeling
-        app.updateFeeling(feeling._id, newFeeling)
+        app.updateFeeling(feeling._id, newFeeling, _handleNewFeeling)
       }
     })
 
     // Only add feeling if it is not recorded today
     if (!isFeelingExist) {
-      app.addFeeling(newFeeling)
+      app.addFeeling(newFeeling, _handleNewFeeling)
     }
   },
 
   // Load feelings from cloud and set feeling data
   setFeelingsData(res) {
     let data = res.data
-    console.log('feelings data set')
-    console.log(data)
-
     let that = this
 
     if (data.length > 0) {
       this.setData({
-        feelings: this.data.feelings.push(data.reverse()), // From new to old
+        feelings: this.data.feelings.concat(data.reverse()), // From new to old
       })
 
       this.findCurrentFeeling(this.data.feelings, (res) => {

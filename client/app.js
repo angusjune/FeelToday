@@ -1,6 +1,6 @@
 const config = require('./config.js')
 
-const MAX_LIMIT = 20
+const MAX_LIMIT = 24
 
 // Initial cloud
 wx.cloud.init({
