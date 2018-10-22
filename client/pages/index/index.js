@@ -53,6 +53,7 @@ Page({
     let date = util.formatTime(new Date(Date.now() + DATE_OFFSET))
     // Get pill menu position to determine date position
     let menuRect = wx.getMenuButtonBoundingClientRect()
+    console.log(menuRect)
 
     this.setData({
       dateText: date,
@@ -477,6 +478,7 @@ Page({
   },
 
   // Save today's feeling to localStorage
+  //@TODO should encode saytext data
   saveFeelingToStorage() {
     let that = this
     let time = Date.now()

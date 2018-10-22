@@ -20,7 +20,7 @@
     </view>
   </view>
 
-  <view class="date" style="top:{{dateStyle.top}}px">{{dateText}}</view>
+  <view class="date" style="top:{{dateStyle.top}}rpx">{{dateText}}</view>
 </view>
 
 <view class="mask {{showMask ? '' : 'mask--hidden'}}"></view>
