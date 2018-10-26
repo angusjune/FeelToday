@@ -1,6 +1,6 @@
 const config = require('./config.js')
 
-const MAX_LIMIT = 24
+const MAX_LIMIT = 15
 
 // Initial cloud
 wx.cloud.init({
@@ -43,16 +43,17 @@ App({
     collection.where({
       _openid: openId, 
     })
+    .orderBy('time', 'desc')
     .skip(page * MAX_LIMIT)
     .limit(MAX_LIMIT)
     .get()
     .then((res) => {
-      // this.globalData.feelings = res.data || []
-
       if (typeof callback === 'function') {
         callback(res)
       }
     })
+    .catch()
+    // .complete()
   },
 
   /**
@@ -95,6 +96,8 @@ App({
         callback(res)
       }
     })
+    .cacth()
+    .finally()
   }
 
 })

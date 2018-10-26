@@ -28,6 +28,9 @@ Page({
     sayTextTrimmed: '', // sayText after substr
     sayMaxLength: SAY__MAX,
     charCount: 0, // How many characters are there in "say" now?
+    sayError: false,
+    showSkeleton: true,
+    isNoMoreFeelings: false,
   },
 
   onLoad(query) {
@@ -43,29 +46,40 @@ Page({
     let that = this
     wx.getSystemInfo ({
       success: (res) => {
-        // Treating iPhone X specially
+        // Get phone model
         let model = res.model.indexOf('iPhone X') > -1 ? 'iPhone X' : res.model
-        that.setData ({ model: model })
-      }
-    })
+        // Get client language
+        //@TODO Support multi-language
+        let lang  = res.language
+        // Set date
+        let date = util.formatTime(new Date(Date.now() + DATE_OFFSET))
+        // Get pill menu position to determine date position
+        let menuRect = wx.getMenuButtonBoundingClientRect()
 
-    // Set date
-    let date = util.formatTime(new Date(Date.now() + DATE_OFFSET))
-    // Get pill menu position to determine date position
-    let menuRect = wx.getMenuButtonBoundingClientRect()
-    console.log(menuRect)
-
-    this.setData({
-      dateText: date,
-      dateStyle: {
-        top: menuRect.top,
-        height: menuRect.height
+        console.log('statusBarHeight', res.statusBarHeight)
+        console.log('menuRect', menuRect)
+        
+        that.setData ({
+          model: model,
+          dateText: date,
+          dateStyle: {
+            top: menuRect.top + res.statusBarHeight + menuRect.height / 2,
+          }
+        })
       }
     })
 
     app.userInfoReadyCallBack = () => {
       console.log('openid: ' + app.globalData.openId)
       app.getFeelings(app.globalData.openId, 0, that.setFeelingsData)
+    }
+
+    //@TODO support sharing
+    if (typeof query !== undefined) {
+      let shareMoodId  = query.moodId
+      let shareSayText = query.sayText
+
+
     }
   },
   
@@ -314,7 +328,23 @@ Page({
   },
 
   hideHistory() {
-    this.setData({ showHistory: false })
+    // Flip all the cards back
+    let styles = []
+    for (let i = 0; i < this.data.feelings.length; i++) {
+      let item = {
+        x: 0,
+        y: 0,
+        z: 0,
+        isFlipped: false
+      }
+      styles[i] = item
+    }
+    this.setData({ 
+      feelingStyles: styles,
+      showHistory: false,
+      isHistoryFlipped: false,
+    })
+
     this.hideMask()
 
     //@TODO setTimeout() is not a flexible solution
@@ -380,8 +410,15 @@ Page({
   },
 
   // On textarea change
+  //@TODO charcount error
   onSayInput(e) {
     let val = e.detail.value
+
+    if (val.length > SAY__MAX) {
+      this.setData({ sayError: true })
+    } else {
+      this.setData({ sayError: false })
+    }
     
     this.setData({
       charCount: val.length
@@ -406,19 +443,10 @@ Page({
 
   onTapHideHistory() {
     this.hideHistory()
+  },
 
-    // Flip all the cards back
-    let styles = []
-    for (let i = 0; i < this.data.feelings.length; i++) {
-      let item = {
-        x: 0,
-        y: 0,
-        z: 0,
-        isFlipped: false
-      }
-      styles[i] = item
-    }
-    this.setData({ feelingStyles: styles })
+  onTapMask() {
+    this.hideHistory()
   },
 
   onHistoryScroll(e) {
@@ -430,12 +458,22 @@ Page({
 
   onHistoryScrollToLower() {
     let that = this
-    let page = app.globalData.dataPageCount++
+    let page = ++app.globalData.dataPageCount
+
+    // Show loading if there could be more feelings
+    if (!this.data.isNoMoreFeelings) {
+      this.setData({ showSkeleton: true})
+    }
 
     app.getFeelings(app.globalData.openId, page, (res) => {
+      // Hide loading
+      that.setData({ showSkeleton: false})
+
       if (res.data.length > 0) {
         that.setFeelingsData(res)
       } else {
+        // If there's no more data
+        that.setData({ isNoMoreFeelings: true })
         app.globalData.dataPageCount--
       }
     })
@@ -473,7 +511,8 @@ Page({
     }
 
     this.setData({
-      feelingStyles: styles
+      feelingStyles: styles,
+      isHistoryFlipped: !this.data.isHistoryFlipped
     })
   },
 
@@ -498,7 +537,7 @@ Page({
       that.data.feelings = []
       app.globalData.dataPageCount = 0
 
-      app.getFeelings(app.globalData.openId, 0, that.setFeelingsData)
+      app.getFeelings(app.globalData.openId, app.globalData.dataPageCount, that.setFeelingsData)
     }
 
     // To find if today's feeling already exist
@@ -523,7 +562,7 @@ Page({
 
     if (data.length > 0) {
       this.setData({
-        feelings: this.data.feelings.concat(data.reverse()), // From new to old
+        feelings: this.data.feelings.concat(data),
       })
 
       this.findCurrentFeeling(this.data.feelings, (res) => {

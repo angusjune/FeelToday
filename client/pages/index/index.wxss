@@ -12,6 +12,7 @@ page {
 }
 
 .date {
+  height: 40rpx;
   position: absolute;
   top: 40rpx;
   width: 100%;
@@ -65,7 +66,7 @@ page {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 16rpx;
   padding: 10rpx 40rpx;
-  margin-bottom: 100rpx;
+  margin-bottom: 140rpx;
   font-weight: 500;
 }
 
@@ -92,6 +93,12 @@ page {
   font-size: 28rpx;
   width: 100%;
   text-align: center;
+  transition: opacity 0.3s linear;
+}
+
+.actions__btn-show-history--hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .actions--iphonex {
@@ -148,7 +155,6 @@ page {
   background-size: 80rpx 60rpx;
   border-radius: 8rpx;
   position: absolute;
-  /* top: 430rpx; */
   right: 60rpx;
   transition: transform 0.15s ease, opacity 0.15s linear;
   z-index: 9;
@@ -159,9 +165,13 @@ page {
   filter: brightness(0.8);
 }
 
-.say__submit.say__submit--disabled {
-  opacity: 0.3;
+.say__submit[disabled] {
+  opacity: 0.8;
 }
+
+/* .say__submit.say__submit--disabled {
+  opacity: 0.3;
+} */
 
 .say--hidden .say__submit {
   transform: scale(0);
@@ -176,8 +186,8 @@ page {
   text-align: right;
 }
 
-.say__char-count--error {
-
+.say__char-count--error .say__char-count__current {
+  color: #CD5967;
 }
 
 
@@ -188,6 +198,7 @@ page {
   width: 100%;
   transition: transform 0.35s ease-out;
   will-change: transform;
+  pointer-events: none;
 }
 
 .history--hidden {
@@ -203,6 +214,7 @@ page {
   background-color: #fff;
   box-shadow: 0 -2rpx 4rpx rgba(0, 0, 0, 0.2), 0 -8rpx 16rpx rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  pointer-events: all;
 }
 
 .history__close {
@@ -216,9 +228,7 @@ page {
 .history__scroll {
   width: 100%;
   height: 100%;
-  margin: 6rpx 0 6rpx 6rpx;
   padding-bottom: 6rpx;
-
 }
 
 .scroll__content {
@@ -227,12 +237,27 @@ page {
   grid-template-rows: repeat(3, 242rpx);
   grid-column-gap: 6rpx;
   grid-row-gap: 6rpx;
+  margin: 6rpx 0 6rpx 6rpx;
+}
+
+.scroll__ending {
+  background: url(http://cdn.popppular.com/feeltoday/ending@3x.png) no-repeat center;
+  background-size: 194px 21px;
+  width: 100%;
+  height: 60rpx;
+  position: relative;
+  bottom: 150rpx;
+  transition: transform 0.3s 0.2s ease-out;
+}
+
+.scroll__ending--hidden {
+  transform: scale(0);
 }
 
 .history__feeling {
   width: 242rpx;
   height: 242rpx;
-  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s linear;
 }
 
 .history__feeling:nth-child(1) .feeling__content {
@@ -241,6 +266,39 @@ page {
 
 .history__feeling:nth-child(3) .feeling__content {
   border-top-right-radius: 16rpx;
+}
+
+.history__feeling--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.history__feeling--skeleton {
+  position: relative;
+  background: #EAECEE;
+  transition: opacity 0.1s linear;
+  z-index: 1;
+}
+
+.history__feeling--skeleton:before {
+  content: '';
+  display: block;
+  height: 100%;
+  position: relative;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(-90deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.40) 50%, rgba(255,255,255,0.00) 100%);
+  background-size: cover;
+  animation: placeHolderShimmer 1s ease-out infinite;
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    transform: translateX(-660rpx)
+  }
+
+  100% {
+    transform: translateX(660rpx)
+  }
 }
 
 .mood--animate {

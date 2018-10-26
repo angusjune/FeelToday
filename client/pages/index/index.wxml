@@ -15,15 +15,15 @@
 
     <button class="actions__btn-confirm-mood" bindtap="onTapConfirmMood">Yes, that's how I feel today</button>
 
-    <view wx:if="{{feelings.length > 0}}" class="actions__btn-show-history" bindtap="onTapShowHistory">
+    <view class="actions__btn-show-history {{feelings.length > 0 ? '' : 'actions__btn-show-history--hidden'}}" bindtap="onTapShowHistory">
       <text class="icon icon--24 icon--reverse icon--chevron-down"></text>
     </view>
   </view>
 
-  <view class="date" style="top:{{dateStyle.top}}rpx">{{dateText}}</view>
+  <view class="date" style="top:{{dateStyle.top}}rpx;">{{dateText}}</view>
 </view>
 
-<view class="mask {{showMask ? '' : 'mask--hidden'}}"></view>
+<view class="mask {{showMask ? '' : 'mask--hidden'}}" bindtap="onTapMask"></view>
 
 <!-- Enter something to say -->
 <view class="say {{showSay ? '' : 'say--hidden'}}">
@@ -33,8 +33,8 @@
 
     <view class="say__submit-wrapper">
       <!-- Why max length is 84? Because 42*2 = 84 -->
-      <view class="say__char-count">{{charCount}}/{{sayMaxLength}}</view>
-      <button class="say__submit mood--{{moodId}}" form-type="submit"></button>
+      <view class="say__char-count {{sayError ? 'say__char-count-error' : ''}}"><text class="say__char-count__current">{{charCount}}</text>/{{sayMaxLength}}</view>
+      <button class="say__submit mood--{{moodId}}" disabled="{{sayError}}"  form-type="submit"></button>
     </view>
 
   </form>
@@ -48,18 +48,41 @@
     <text class="icon icon--24 icon--chevron-down"></text>
   </view>
 
-  <view class="history__modal">
+  <view class="history__modal" bindtap="onTapHistoryModal">
     <block wx:if="{{feelings.length > 0}}">
-      <scroll-view class="history__scroll" scroll-y scroll-with-animation bindscroll="onHistoryScroll" bindscrolltolower="onHistoryScrollToLower">
+      <scroll-view class="history__scroll" scroll-y="{{isHistoryFlipped ? false : true}}" scroll-with-animation bindscroll="onHistoryScroll" bindscrolltolower="onHistoryScrollToLower">
         <view class="scroll__content">
 
           <block wx:for="{{feelings}}" wx:for-item="feeling" wx:key="unique">
           
-            <feeling class="history__feeling" feeling="{{feeling}}" isFlipped="{{feelingStyles[index].isFlipped}}" bindtap="onTapFeeling" data-index="{{index}}" data-isflipped="{{feelingStyles[index].isFlipped}}" style="z-index: {{feelingStyles[index].z}}; transform: translateX({{feelingStyles[index].x}}px) translateY({{feelingStyles[index].y}}px)"></feeling>
+            <feeling class="history__feeling" feeling="{{feeling}}" isFlipped="{{feelingStyles[index].isFlipped}}" catchtap="onTapFeeling" data-index="{{index}}" data-isflipped="{{feelingStyles[index].isFlipped}}" style="z-index: {{feelingStyles[index].z}}; transform: translateX({{feelingStyles[index].x}}px) translateY({{feelingStyles[index].y}}px)"></feeling>
 
           </block>
 
+          <wxs module="skeleton">
+            var getNum = function(array) {
+              var count = []
+              var remaining = array.length % 3
+
+              if (remaining !== 0) {
+                remaining = 3 - remaining
+              }
+              
+              for(var i = 0; i < remaining + 3; i++) {
+                count.push(i)
+              }
+              return count
+            }
+            module.exports.getNum = getNum
+          </wxs>
+
+          <block wx:for="{{skeleton.getNum(feelings)}}">
+            <view class="history__feeling history__feeling--skeleton {{showSkeleton ? '' : 'history__feeling--hidden'}}"></view>
+          </block>
+
         </view>
+        
+        <view class="scroll__ending {{showSkeleton ? 'scroll__ending--hidden' : ''}}"></view>
 
       </scroll-view>
     </block>
@@ -72,5 +95,5 @@
 
 <!-- Mood animation when confirm mood button is clicked -->
 <view class="mood mood--{{moodId}} mood--animate {{}}" animation="{{animationData}}">
-  <view class="mood--animate__feeling-img" style="background-image:url(http://cdn.popppular.com/feeltoday/mood-{{moodId}}@2x.png?v=1)"></view>
+  <view class="mood--animate__feeling-img" style="background-image:url(http://cdn.popppular.com/feeltoday/mood-{{moodId}}@2x.png?v=2)"></view>
 </view>
