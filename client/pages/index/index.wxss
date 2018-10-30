@@ -166,12 +166,36 @@ page {
 }
 
 .say__submit[disabled] {
-  opacity: 0.8;
+  opacity: 0.3;
 }
 
-/* .say__submit.say__submit--disabled {
-  opacity: 0.3;
-} */
+.mood--0.say__submit[disabled] {
+  background-color: #E94B35;
+}
+
+.mood--1.say__submit[disabled] {
+  background-color: #F59D00;
+}
+
+.mood--2.say__submit[disabled] {
+  background-color: #1FCE6D;
+}
+
+.mood--3.say__submit[disabled] {
+  background-color: #2C97DE;
+}
+
+.mood--4.say__submit[disabled] {
+  background-color: #8F3FAF;
+}
+
+.mood--5.say__submit[disabled] {
+  background-color: #7F8C8D;
+}
+
+.mood--6.say__submit[disabled] {
+  background-color: #2B3E51;
+}
 
 .say--hidden .say__submit {
   transform: scale(0);
@@ -188,6 +212,32 @@ page {
 
 .say__char-count--error .say__char-count__current {
   color: #CD5967;
+}
+
+.say__char-count__current {
+  font-weight: bold;
+}
+
+.say__char-count--shaking {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translateX(-1px);
+  }
+  
+  20%, 80% {
+    transform: translateX(2px);
+  }
+
+  30%, 50%, 70% {
+    transform: translateX(-4px);
+  }
+
+  40%, 60% {
+    transform: translateX(4px);
+  }
 }
 
 
