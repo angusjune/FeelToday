@@ -9,17 +9,18 @@ const app = getApp()
 const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = moods.moods
+const DEFAULT_MOOD = 2
 const GAP  = Math.floor(603/MOODS.length) // Magic number 603, should be changed to device height?
 
 const SAY__MAX = 84 // The max length of "say"
 
-var currentFaceParam = MOODS[3].param
+var currentFaceParam = MOODS[DEFAULT_MOOD].param
 
 Page({
   data: {
     isAnimating: false,
     feelings: [],
-    moodId: 3,
+    moodId: DEFAULT_MOOD,
     showActions: true,
     showHistory: false,
     isHistoryFlipped: false, // Is there any history card been flipped?
@@ -35,7 +36,7 @@ Page({
 
   onLoad(query) {
     this.drawFace(currentFaceParam)
-    this.drawMood(3) // Default mood Id is 3
+    this.drawMood(this.data.moodId)
 
     let animation = wx.createAnimation()
     let imgAnimation = wx.createAnimation()
@@ -435,6 +436,17 @@ Page({
     })
     
     this.hideSay()
+  },
+
+  onTapSaySubmit() {
+    console.log('tapped')
+    if (this.data.sayError) {
+      this.setData({ isSubmitTapped: true })
+    }
+  },
+
+  onSayCharCountAnimationEnd() {
+    this.setData({ isSubmitTapped: false })
   },
 
   onTapShowHistory() {

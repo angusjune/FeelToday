@@ -29,12 +29,12 @@
 <view class="say {{showSay ? '' : 'say--hidden'}}">
   <form bindsubmit="onSubmitSay">
 
-    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." value="{{sayText}}" bindinput="onSayInput" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" id="19" data-is="coming" />
+    <textarea class="say__textarea" name="textarea" placeholder="Just say it..." value="{{sayText}}" bindinput="onSayInput" focus="{{showSay}}" hidden="{{!showSay}}" disabled="{{!showSay}}" maxlength="-1" id="19" data-is="coming" />
 
     <view class="say__submit-wrapper">
       <!-- Why max length is 84? Because 42*2 = 84 -->
-      <view class="say__char-count {{sayError ? 'say__char-count-error' : ''}}"><text class="say__char-count__current">{{charCount}}</text>/{{sayMaxLength}}</view>
-      <button class="say__submit mood--{{moodId}}" disabled="{{sayError}}"  form-type="submit"></button>
+      <view class="say__char-count {{sayError ? 'say__char-count--error' : ''}} {{isSubmitTapped ? 'say__char-count--shaking' : ''}}" onanimationend="onSayCharCountAnimationEnd"><text class="say__char-count__current">{{charCount}}</text>/{{sayMaxLength}}</view>
+      <button class="say__submit mood--{{moodId}}" disabled="{{sayError}}"  form-type="submit" bindtap="onTapSaySubmit"></button>
     </view>
 
   </form>
