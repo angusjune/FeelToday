@@ -5,12 +5,12 @@ const moods = require('./moods.js')
 
 const app = getApp()
 
-// const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
-const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
+const DATE_OFFSET = - 2 * 60 * 60 * 1000 // Reset data at 2am
+// const DATE_OFFSET = 24 * 60 * 60 * 1000 - 50 // Reset date every 50ms for debugging purpose
 const CANVAS_SIZE = draw.makeSize(120, 120)
 const MOODS = moods.moods
 const DEFAULT_MOOD = 2
-const GAP  = Math.floor(603/MOODS.length) // Magic number 603, should be changed to device height?
+var GAP  = Math.floor(603/MOODS.length) // Default value
 
 const SAY__MAX = 84 // The max length of "say"
 
@@ -32,6 +32,7 @@ Page({
     sayError: false,
     showSkeleton: true,
     isNoMoreFeelings: false,
+    isTodayFelt: false,
   },
 
   onLoad(query) {
@@ -67,6 +68,9 @@ Page({
             top: menuRect.top + res.statusBarHeight + menuRect.height / 2,
           }
         })
+
+        // Change 
+        GAP = Math.floor(res.windowHeight / MOODS.length)
       }
     })
 
@@ -411,7 +415,6 @@ Page({
   },
 
   // On textarea change
-  //@TODO charcount error
   onSayInput(e) {
     let val = e.detail.value
 
@@ -439,7 +442,6 @@ Page({
   },
 
   onTapSaySubmit() {
-    console.log('tapped')
     if (this.data.sayError) {
       this.setData({ isSubmitTapped: true })
     }
@@ -528,7 +530,7 @@ Page({
     })
   },
 
-  // Save today's feeling to localStorage
+  // Save today's feeling to cloud
   //@TODO should encode saytext data
   saveFeelingToStorage() {
     let that = this
@@ -594,6 +596,7 @@ Page({
 
 
   findCurrentFeeling(feelings, callback) {
+    let that = this
     let now = Date.now() + DATE_OFFSET
 
     feelings.forEach((feeling) => {
@@ -604,6 +607,8 @@ Page({
           time: feeling.time,
           say: feeling.say
         })
+
+        that.setData({ isTodayFelt: true })
       }
     })
   },

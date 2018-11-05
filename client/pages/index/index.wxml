@@ -13,7 +13,7 @@
   <view class="actions {{showActions ? '' : 'actions--hidden'}}  {{ model === 'iPhone X' ? 'actions--iphonex' : '' }}">
     <button class="actions__btn-add-text {{sayText != '' ? 'actions__btn-add-text--filled' : ''}}" bindtap="onTapShowSay">{{sayText != '' ? sayTextTrimmed : 'Got something to say...'}}</button>
 
-    <button class="actions__btn-confirm-mood" bindtap="onTapConfirmMood">Yes, that's how I feel today</button>
+    <button class="actions__btn-confirm-mood" bindtap="onTapConfirmMood">{{isTodayFelt ? "I've changed my mind" : "Yes, that's how I feel today"}}</button>
 
     <view class="actions__btn-show-history {{feelings.length > 0 ? '' : 'actions__btn-show-history--hidden'}}" bindtap="onTapShowHistory">
       <text class="icon icon--24 icon--reverse icon--chevron-down"></text>
