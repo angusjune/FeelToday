@@ -97,3 +97,7 @@
 <view class="mood mood--{{moodId}} mood--animate {{}}" animation="{{animationData}}">
   <view class="mood--animate__feeling-img" style="background-image:url(http://cdn.popppular.com/feeltoday/mood-{{moodId}}@2x.png?v=2)"></view>
 </view>
+
+<!-- <view class="share">
+
+</view> -->

@@ -58,8 +58,8 @@ Page({
         // Get pill menu position to determine date position
         let menuRect = wx.getMenuButtonBoundingClientRect()
 
-        console.log('statusBarHeight', res.statusBarHeight)
-        console.log('menuRect', menuRect)
+        console.info('statusBarHeight', res.statusBarHeight)
+        console.info('menuRect', menuRect)
         
         that.setData ({
           model: model,
@@ -75,7 +75,7 @@ Page({
     })
 
     app.userInfoReadyCallBack = () => {
-      console.log('openid: ' + app.globalData.openId)
+      console.info('openid: ', app.globalData.openId)
       app.getFeelings(app.globalData.openId, 0, that.setFeelingsData)
     }
 
@@ -89,10 +89,10 @@ Page({
   },
   
   onShareAppMessage() {
-    let that = this
     return {
       title: 'I am feeling:',
-      path: `/pages/index/index?moodId=${that.moodId}&sayText=${that.sayText}&isShare=true`
+      path: `/pages/index/index?moodId=${this.data.moodId}&sayText=${this.data.sayText}&isShare=true`,
+      imageUrl: `/img/share-${this.data.moodId}.png`,
     }
   },
 
@@ -402,6 +402,8 @@ Page({
     this.hideFace()
     this.hideActions()
     this.animateMoodSave()
+
+    wx.vibrateShort()
 
     //@TODO setTimeout() is not a flexible solution
     setTimeout(() => {
