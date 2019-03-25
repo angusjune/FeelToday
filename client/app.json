@@ -6,8 +6,8 @@
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#0D0D0D",
     "navigationBarTitleText": "Feel Today",
-    "navigationBarTextStyle":"light",
+    "navigationBarTextStyle":"white",
     "navigationStyle": "custom"
   },
-  "cloud": "true"
+  "cloud": true
 }
