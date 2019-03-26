@@ -60,6 +60,7 @@
           </block>
 
           <wxs module="skeleton">
+          // Calculate how many skeleton placeholders needed
             var getNum = function(array) {
               var count = []
               var remaining = array.length % 3
