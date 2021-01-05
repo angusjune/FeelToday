@@ -1,13 +1,14 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#0D0D0D",
     "navigationBarTitleText": "Feel Today",
-    "navigationBarTextStyle":"white",
+    "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
   },
-  "cloud": true
+  "cloud": true,
+  "sitemapLocation": "sitemap.json"
 }
